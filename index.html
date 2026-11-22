@@ -1,0 +1,2784 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مِيزان | نظام إدارة المصروفات الذكي</title>
+
+    <!-- Google Fonts: Cairo & Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- SheetJS (XLSX) for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- html2pdf.js for Clean Arabic PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* ==========================================================================
+           1. CSS VARIABLES & RESET (Ultra-Clean & Polished RTL Design System)
+           ========================================================================== */
+        :root {
+            --bg-main: #F4F7FA;
+            --bg-surface: #FFFFFF;
+            --bg-subtle: #F8FAFC;
+            --border-color: #E2E8F0;
+            --border-focus: #059669;
+
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --emerald-50: #ECFDF5;
+            --emerald-100: #D1FAE5;
+
+            --slate-900: #0F172A;
+            --slate-800: #1E293B;
+
+            --coral-600: #E11D48;
+            --coral-50: #FFF1F2;
+            --coral-100: #FFE4E6;
+
+            --amber-600: #D97706;
+            --amber-50: #FFFBEB;
+
+            --indigo-600: #4F46E5;
+            --indigo-50: #EEF2FF;
+
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 10px 25px rgba(15, 23, 42, 0.08);
+            --shadow-modal: 0 24px 48px rgba(15, 23, 42, 0.18);
+
+            --font-main: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+            --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 15px;
+            line-height: 1.6;
+            direction: rtl;
+            text-align: right;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ==========================================================================
+           2. SPLIT-SCREEN AUTHENTICATION VIEW
+           ========================================================================== */
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: radial-gradient(circle at top right, #E2E8F0 0%, #F4F7FA 55%, #ECFDF5 100%);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 1080px;
+            background: var(--bg-surface);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            overflow: hidden;
+        }
+
+        /* Visual Showcase Panel (Right side in RTL) */
+        .auth-showcase {
+            background: linear-gradient(145deg, #0F172A 0%, #1E293B 55%, #064E3B 100%);
+            color: #FFFFFF;
+            padding: 44px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-showcase::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            left: -80px;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #10B981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #FFFFFF;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+        }
+
+        .brand-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .showcase-content {
+            margin: 32px 0;
+        }
+
+        .showcase-content h1 {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.4;
+            margin-bottom: 14px;
+            color: #F8FAFC;
+        }
+
+        .showcase-content p {
+            font-size: 14.5px;
+            color: #CBD5E1;
+            line-height: 1.75;
+            margin-bottom: 28px;
+        }
+
+        .showcase-stats-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+        }
+
+        .showcase-stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #94A3B8;
+            margin-bottom: 10px;
+        }
+
+        .showcase-stats-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #34D399;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .showcase-pill {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 99px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #6EE7B7;
+        }
+
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13.5px;
+            color: #E2E8F0;
+        }
+
+        .feature-list li i {
+            color: #34D399;
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .showcase-footer {
+            font-size: 12px;
+            color: #94A3B8;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 16px;
+        }
+
+        /* Auth Form Panel (Left side in RTL) */
+        .auth-form-panel {
+            padding: 44px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--bg-surface);
+        }
+
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-main);
+            padding: 5px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .auth-tab-btn {
+            padding: 10px 14px;
+            border-radius: 9px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .auth-tab-btn.active {
+            background: var(--bg-surface);
+            color: var(--emerald-600);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .auth-header {
+            margin-bottom: 22px;
+        }
+
+        .auth-header h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .auth-header p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+        }
+
+        /* Dedicated Alert Box inside Auth Form */
+        .auth-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: var(--coral-50);
+            border: 1px solid #FECDD3;
+            color: #BE123C;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .auth-alert i {
+            margin-top: 3px;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        /* RTL Input with Icon — Zero Overlap Guaranteed */
+        .input-icon-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon-wrap .field-icon {
+            position: absolute;
+            right: 14px;
+            color: var(--text-muted);
+            font-size: 15px;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .form-control {
+            width: 100%;
+            height: 46px;
+            padding: 0 42px 0 14px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-subtle);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-control.no-icon {
+            padding: 0 14px;
+        }
+
+        .form-control:focus {
+            background: var(--bg-surface);
+            border-color: var(--emerald-600);
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+        }
+
+        .input-icon-wrap:focus-within .field-icon {
+            color: var(--emerald-600);
+        }
+
+        .toggle-pass-btn {
+            position: absolute;
+            left: 12px;
+            color: var(--text-muted);
+            padding: 6px;
+            font-size: 14px;
+        }
+
+        .toggle-pass-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .form-control.has-left-btn {
+            padding-left: 42px;
+        }
+
+        .auth-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--emerald-600);
+            cursor: pointer;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 46px;
+            padding: 0 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: #FFFFFF;
+            box-shadow: 0 6px 18px rgba(5, 150, 105, 0.25);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 22px rgba(5, 150, 105, 0.34);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .auth-divider {
+            position: relative;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .auth-divider span {
+            position: relative;
+            background: var(--bg-surface);
+            padding: 0 12px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .social-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-google {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            border: 1.5px solid var(--border-color);
+        }
+
+        .btn-google:hover {
+            background: var(--bg-subtle);
+            border-color: #CBD5E1;
+        }
+
+        .btn-demo {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+            border: 1px solid var(--emerald-100);
+        }
+
+        .btn-demo:hover {
+            background: var(--emerald-100);
+        }
+
+        /* ==========================================================================
+           3. DASHBOARD LAYOUT & TOP NAVBAR
+           ========================================================================== */
+        .dashboard-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .topbar-inner {
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #059669, #0F172A);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22);
+        }
+
+        .topbar-title-group h1 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.25;
+        }
+
+        .topbar-title-group span {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-export-excel {
+            height: 40px;
+            padding: 0 14px;
+            border-radius: 10px;
+            background: #ECFDF5;
+            color: #047857;
+            border: 1px solid #A7F3D0;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .btn-export-excel:hover {
+            background: #D1FAE5;
+        }
+
+        .btn-export-pdf {
+            height: 40px;
+            padding: 0 14px;
+            border-radius: 10px;
+            background: #FFF1F2;
+            color: #BE123C;
+            border: 1px solid #FECDD3;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .btn-export-pdf:hover {
+            background: #FFE4E6;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-right: 12px;
+            margin-right: 4px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0F172A, #059669);
+            color: #FFFFFF;
+            font-weight: 800;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-meta {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .user-meta strong {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .user-meta small {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .btn-logout {
+            height: 38px;
+            padding: 0 12px;
+            border-radius: 10px;
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .btn-logout:hover {
+            background: var(--coral-50);
+            color: var(--coral-600);
+            border-color: #FECDD3;
+        }
+
+        /* Main Container */
+        .main-content {
+            width: 100%;
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 26px 24px 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ==========================================================================
+           4. 4 EQUAL-HEIGHT KPI CARDS
+           ========================================================================== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .kpi-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .kpi-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .kpi-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .kpi-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .kpi-icon.slate { background: #F1F5F9; color: #0F172A; }
+        .kpi-icon.emerald { background: var(--emerald-50); color: var(--emerald-600); }
+        .kpi-icon.coral { background: var(--coral-50); color: var(--coral-600); }
+        .kpi-icon.indigo { background: var(--indigo-50); color: var(--indigo-600); }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            margin-bottom: 10px;
+            direction: ltr;
+            text-align: right;
+        }
+
+        .kpi-value.emerald-text { color: var(--emerald-600); }
+        .kpi-value.coral-text { color: var(--coral-600); }
+
+        .kpi-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 99px;
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+
+        .status-badge.surplus {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+        }
+
+        .status-badge.deficit {
+            background: var(--coral-50);
+            color: var(--coral-600);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #E2E8F0;
+            border-radius: 99px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4F46E5, #10B981);
+            border-radius: 99px;
+            transition: width 0.4s ease;
+        }
+
+        /* ==========================================================================
+           5. CHARTS SECTION (Fixed 300px Canvas Containers)
+           ========================================================================== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1.45fr 1fr;
+            gap: 18px;
+        }
+
+        .card-box {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            padding: 22px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .card-header h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-header h3 i {
+            color: var(--emerald-600);
+        }
+
+        .card-subtitle {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Fixed height container prevents Chart.js infinite resize bug */
+        .chart-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+
+        /* ==========================================================================
+           6. FILTER & ACTION TOOLBAR
+           ========================================================================== */
+        .toolbar-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .toolbar-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .currency-select-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-subtle);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0 12px;
+            height: 44px;
+        }
+
+        .currency-select-wrap label {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .currency-select-wrap select {
+            border: none;
+            background: transparent;
+            font-weight: 700;
+            font-size: 13.5px;
+            color: var(--text-primary);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .filters-row {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Custom RTL Select Dropdowns — Zero Arrow Overlap */
+        .select-control {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px 0 36px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            background-color: var(--bg-subtle);
+            color: var(--text-primary);
+            font-size: 13.5px;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            transition: var(--transition);
+        }
+
+        .select-control:focus {
+            background-color: var(--bg-surface);
+            border-color: var(--emerald-600);
+        }
+
+        .btn-reset-filter {
+            height: 44px;
+            padding: 0 14px;
+            border-radius: 12px;
+            background: var(--bg-subtle);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .btn-reset-filter:hover {
+            background: #E2E8F0;
+            color: var(--text-primary);
+        }
+
+        /* ==========================================================================
+           7. TRANSACTIONS TABLE & EMPTY STATE
+           ========================================================================== */
+        .table-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            min-width: 720px;
+        }
+
+        .tx-table thead {
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tx-table th {
+            padding: 14px 18px;
+            font-size: 12.5px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .tx-table td {
+            padding: 15px 18px;
+            font-size: 14px;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+        }
+
+        .tx-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tx-table tbody tr:hover {
+            background: #F8FAFC;
+        }
+
+        .tx-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .tx-desc {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 12px;
+            border-radius: 99px;
+            font-size: 12.5px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .type-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .type-pill.income {
+            background: var(--emerald-50);
+            color: var(--emerald-700);
+        }
+
+        .type-pill.expense {
+            background: var(--coral-50);
+            color: var(--coral-600);
+        }
+
+        .tx-amount {
+            font-weight: 800;
+            font-size: 14.5px;
+            white-space: nowrap;
+            direction: ltr;
+            text-align: right;
+        }
+
+        .tx-amount.income { color: var(--emerald-600); }
+        .tx-amount.expense { color: var(--coral-600); }
+
+        .row-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-action-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+
+        .icon-action-btn.edit {
+            background: #F1F5F9;
+            color: #334155;
+        }
+
+        .icon-action-btn.edit:hover {
+            background: #E0E7FF;
+            color: #4338CA;
+        }
+
+        .icon-action-btn.delete {
+            background: #FFF1F2;
+            color: #E11D48;
+        }
+
+        .icon-action-btn.delete:hover {
+            background: #FFE4E6;
+            color: #BE123C;
+        }
+
+        .empty-state {
+            padding: 56px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: var(--bg-main);
+            color: var(--text-muted);
+            font-size: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .empty-state h4 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        /* ==========================================================================
+           8. MODAL DIALOG (ADD / EDIT TRANSACTION)
+           ========================================================================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal-card {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-surface);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-modal);
+            overflow: hidden;
+            animation: modalPop 0.2s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--bg-main);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: var(--coral-50);
+            color: var(--coral-600);
+        }
+
+        .modal-body {
+            padding: 22px;
+        }
+
+        .type-switcher {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: var(--bg-main);
+            padding: 5px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 18px;
+        }
+
+        .type-switch-btn {
+            height: 40px;
+            border-radius: 9px;
+            font-weight: 700;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: var(--transition);
+        }
+
+        .type-switch-btn.active-expense {
+            background: var(--coral-600);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+        }
+
+        .type-switch-btn.active-income {
+            background: var(--emerald-600);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+        }
+
+        .modal-two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .modal-footer {
+            padding: 16px 22px;
+            background: var(--bg-subtle);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #F1F5F9;
+            color: var(--text-primary);
+        }
+
+        /* ==========================================================================
+           9. TOAST NOTIFICATIONS
+           ========================================================================== */
+        .toast-container {
+            position: fixed;
+            bottom: 22px;
+            left: 22px;
+            z-index: 80;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 360px;
+        }
+
+        .toast-item {
+            background: #0F172A;
+            color: #FFFFFF;
+            padding: 13px 16px;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.22);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13.5px;
+            font-weight: 600;
+            animation: slideToast 0.25s ease-out;
+        }
+
+        .toast-item.success i { color: #34D399; }
+        .toast-item.error i { color: #FB7185; }
+        .toast-item.info i { color: #60A5FA; }
+
+        @keyframes slideToast {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           10. RESPONSIVE MEDIA QUERIES (Tablet & Mobile)
+           ========================================================================== */
+        @media (max-width: 1024px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .filters-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+            }
+            .auth-showcase {
+                display: none;
+            }
+            .auth-form-panel {
+                padding: 32px 24px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .topbar-inner {
+                padding: 12px 16px;
+            }
+            .main-content {
+                padding: 18px 14px 40px;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .filters-row {
+                grid-template-columns: 1fr;
+            }
+            .modal-two-cols {
+                grid-template-columns: 1fr;
+            }
+            .user-meta {
+                display: none;
+            }
+            .btn-export-excel span,
+            .btn-export-pdf span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================================================
+         VIEW 1: SPLIT-SCREEN AUTHENTICATION (FIREBASE v10)
+         ======================================================================== -->
+    <section id="auth-view" class="auth-wrapper">
+        <div class="auth-container">
+            <!-- Visual Showcase Side -->
+            <div class="auth-showcase">
+                <div>
+                    <div class="brand-badge">
+                        <div class="brand-icon">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <span class="brand-title">مِيزان المالي</span>
+                    </div>
+
+                    <div class="showcase-content">
+                        <h1>تحكّم ذكي في مصروفاتك، ورؤية أوضح لمستقبلك المالي.</h1>
+                        <p>منصة متكاملة لتتبع الدخل والمصروفات اليومية، تحليل التدفقات النقدية بالرسوم البيانية التفاعلية، وتصدير التقارير المعتمدة بضغطة زر.</p>
+
+                        <div class="showcase-stats-card">
+                            <div class="showcase-stats-header">
+                                <span>معدل الادخار الشهري الذكي</span>
+                                <i class="fa-solid fa-arrow-trend-up" style="color: #34D399;"></i>
+                            </div>
+                            <div class="showcase-stats-value">
+                                <span>+34.8%</span>
+                                <span class="showcase-pill">نمو مستقر</span>
+                            </div>
+                        </div>
+
+                        <ul class="feature-list">
+                            <li><i class="fa-solid fa-circle-check"></i><span>رسوم بيانية تفاعلية لتحليل الدخل والمصروفات حسب الفئات</span></li>
+                            <li><i class="fa-solid fa-circle-check"></i><span>تصدير تقارير مالية عربية احترافية بصيغتي Excel و PDF</span></li>
+                            <li><i class="fa-solid fa-circle-check"></i><span>حماية ومزامنة فورية لحسابك عبر Firebase Authentication</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="showcase-footer">
+                    <span>نظام مِيزان لإدارة المصروفات الشخصية &copy; 2026</span>
+                </div>
+            </div>
+
+            <!-- Form Panel Side -->
+            <div class="auth-form-panel">
+                <div class="auth-tabs">
+                    <button type="button" id="tab-login" class="auth-tab-btn active" onclick="UI.switchAuthTab('login')">تسجيل الدخول</button>
+                    <button type="button" id="tab-register" class="auth-tab-btn" onclick="UI.switchAuthTab('register')">إنشاء حساب جديد</button>
+                </div>
+
+                <div class="auth-header">
+                    <h2 id="auth-heading">مرحباً بعودتك!</h2>
+                    <p id="auth-subheading">سجّل دخولك للوصول إلى لوحة التحكم وتقاريرك المالية</p>
+                </div>
+
+                <!-- Dedicated Error Alert Box -->
+                <div id="auth-error-box" class="auth-alert hidden" role="alert">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="auth-error-text"></span>
+                </div>
+
+                <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+                    <!-- Full Name (Register Mode Only) -->
+                    <div id="name-field-group" class="form-group hidden">
+                        <label class="form-label" for="auth-name">الاسم الكامل</label>
+                        <div class="input-icon-wrap">
+                            <i class="fa-regular fa-user field-icon"></i>
+                            <input type="text" id="auth-name" class="form-control" placeholder="أدخل اسمك الكامل">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label class="form-label" for="auth-email">البريد الإلكتروني</label>
+                        <div class="input-icon-wrap">
+                            <i class="fa-regular fa-envelope field-icon"></i>
+                            <input type="email" id="auth-email" class="form-control" placeholder="name@example.com" required>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label class="form-label" for="auth-password">كلمة المرور</label>
+                        <div class="input-icon-wrap">
+                            <i class="fa-solid fa-lock field-icon"></i>
+                            <input type="password" id="auth-password" class="form-control has-left-btn" placeholder="••••••••" minlength="6" required>
+                            <button type="button" class="toggle-pass-btn" onclick="UI.togglePasswordVisibility()" title="إظهار / إخفاء كلمة المرور">
+                                <i id="pass-eye-icon" class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="remember-row" class="auth-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="auth-remember" checked>
+                            <span>تذكر تسجيل دخولي</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="auth-submit-btn" class="btn btn-primary btn-full">
+                        <span id="auth-submit-text">تسجيل الدخول</span>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>أو المتابعة السريعة عبر</span>
+                </div>
+
+                <div class="social-stack">
+                    <button type="button" class="btn btn-google btn-full" onclick="AuthService.loginWithGoogle()">
+                        <svg width="18" height="18" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/>
+                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/>
+                            <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/>
+                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/>
+                        </svg>
+                        <span>المتابعة باستخدام حساب Google</span>
+                    </button>
+
+                    <button type="button" class="btn btn-demo btn-full" onclick="AuthService.loginDemo()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>معاينة سريعة (وضع التجربة)</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================================
+         VIEW 2: MAIN DASHBOARD
+         ======================================================================== -->
+    <section id="dashboard-view" class="dashboard-wrapper hidden">
+        <!-- Sticky Top Navbar -->
+        <header class="topbar">
+            <div class="topbar-inner">
+                <div class="topbar-brand">
+                    <div class="topbar-logo">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <div class="topbar-title-group">
+                        <h1>مِيزان | إدارة المصروفات</h1>
+                        <span>لوحة التحليل المالي والتقارير</span>
+                    </div>
+                </div>
+
+                <div class="topbar-actions">
+                    <button type="button" class="btn btn-export-excel" onclick="ExportService.exportExcel()" title="تصدير إلى ملف Excel">
+                        <i class="fa-solid fa-file-excel"></i>
+                        <span>تصدير Excel</span>
+                    </button>
+
+                    <button type="button" class="btn btn-export-pdf" onclick="ExportService.exportPDF()" title="تصدير تقرير PDF">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>تصدير PDF</span>
+                    </button>
+
+                    <div class="user-chip">
+                        <div id="user-avatar-box" class="user-avatar">م</div>
+                        <div class="user-meta">
+                            <strong id="user-display-name">مستخدم مِيزان</strong>
+                            <small id="user-display-email">user@example.com</small>
+                        </div>
+                        <button type="button" class="btn btn-logout" onclick="AuthService.logout()" title="تسجيل الخروج">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>خروج</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            <!-- 4 KPI Cards Grid -->
+            <section class="kpi-grid">
+                <!-- Card 1: Net Balance -->
+                <article class="kpi-card">
+                    <div class="kpi-top">
+                        <span class="kpi-title">صافي الرصيد الحالي</span>
+                        <div class="kpi-icon slate">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div id="kpi-balance" class="kpi-value">0.00 ر.س</div>
+                    <div class="kpi-footer">
+                        <span>حالة الميزانية:</span>
+                        <span id="kpi-balance-badge" class="status-badge surplus">فائض مالي</span>
+                    </div>
+                </article>
+
+                <!-- Card 2: Total Income -->
+                <article class="kpi-card">
+                    <div class="kpi-top">
+                        <span class="kpi-title">إجمالي الدخل</span>
+                        <div class="kpi-icon emerald">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                        </div>
+                    </div>
+                    <div id="kpi-income" class="kpi-value emerald-text">0.00 ر.س</div>
+                    <div class="kpi-footer">
+                        <span id="kpi-income-count">0 عمليات دخل مسجلة</span>
+                        <i class="fa-solid fa-circle-plus" style="color: var(--emerald-600);"></i>
+                    </div>
+                </article>
+
+                <!-- Card 3: Total Expenses -->
+                <article class="kpi-card">
+                    <div class="kpi-top">
+                        <span class="kpi-title">إجمالي المصروفات</span>
+                        <div class="kpi-icon coral">
+                            <i class="fa-solid fa-arrow-trend-down"></i>
+                        </div>
+                    </div>
+                    <div id="kpi-expense" class="kpi-value coral-text">0.00 ر.س</div>
+                    <div class="kpi-footer">
+                        <span id="kpi-expense-count">0 عمليات مصروف مسجلة</span>
+                        <i class="fa-solid fa-circle-minus" style="color: var(--coral-600);"></i>
+                    </div>
+                </article>
+
+                <!-- Card 4: Monthly Savings Rate -->
+                <article class="kpi-card">
+                    <div class="kpi-top">
+                        <span class="kpi-title">نسبة الادخار</span>
+                        <div class="kpi-icon indigo">
+                            <i class="fa-solid fa-piggy-bank"></i>
+                        </div>
+                    </div>
+                    <div id="kpi-savings-rate" class="kpi-value">0%</div>
+                    <div>
+                        <div class="progress-track">
+                            <div id="kpi-savings-bar" class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Charts Section (2 Side-by-Side Cards with Fixed 300px Canvas Height) -->
+            <section class="charts-grid">
+                <article class="card-box">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-chart-column"></i><span>مقارنة الدخل والمصروفات الشهرية</span></h3>
+                        <span class="card-subtitle">تحليل التدفق النقدي عبر الأشهر</span>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </article>
+
+                <article class="card-box">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-chart-pie"></i><span>توزيع المصروفات حسب الفئات</span></h3>
+                        <span class="card-subtitle">النسب المئوية للإنفاق</span>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Filter & Add Transaction Toolbar -->
+            <section class="toolbar-card">
+                <div class="toolbar-top">
+                    <div class="toolbar-title">
+                        <i class="fa-solid fa-list-check" style="color: var(--emerald-600);"></i>
+                        <span>سجل المعاملات المالية</span>
+                    </div>
+
+                    <div class="toolbar-actions-right">
+                        <div class="currency-select-wrap">
+                            <label for="currency-select"><i class="fa-solid fa-coins"></i> العملة:</label>
+                            <select id="currency-select" onchange="App.changeCurrency(this.value)">
+                                <option value="SAR">ر.س (ريال سعودي)</option>
+                                <option value="EGP">ج.م (جنيه مصري)</option>
+                                <option value="USD">$ (دولار أمريكي)</option>
+                                <option value="AED">د.إ (درهم إماراتي)</option>
+                            </select>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="UI.openTxModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>إضافة معاملة</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters-row">
+                    <!-- Search Input -->
+                    <div class="input-icon-wrap">
+                        <i class="fa-solid fa-magnifying-glass field-icon"></i>
+                        <input type="text" id="filter-search" class="form-control" placeholder="ابحث بالوصف أو الملاحظات..." oninput="App.applyFilters()">
+                    </div>
+
+                    <!-- Type Filter -->
+                    <select id="filter-type" class="select-control" onchange="App.applyFilters()">
+                        <option value="all">جميع الأنواع (دخل ومصروف)</option>
+                        <option value="income">الدخل فقط</option>
+                        <option value="expense">المصروفات فقط</option>
+                    </select>
+
+                    <!-- Category Filter -->
+                    <select id="filter-category" class="select-control" onchange="App.applyFilters()">
+                        <option value="all">جميع الفئات</option>
+                    </select>
+
+                    <!-- Month Filter -->
+                    <select id="filter-month" class="select-control" onchange="App.applyFilters()">
+                        <option value="all">جميع الأشهر</option>
+                    </select>
+
+                    <!-- Reset Filters -->
+                    <button type="button" class="btn btn-reset-filter" onclick="App.resetFilters()" title="إعادة ضبط الفلاتر">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>مسح</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Transactions Table -->
+            <section class="table-card">
+                <div class="table-responsive">
+                    <table class="tx-table">
+                        <thead>
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>الوصف</th>
+                                <th>الفئة</th>
+                                <th>النوع</th>
+                                <th>المبلغ</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tx-table-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="tx-empty-state" class="empty-state hidden">
+                    <div class="empty-icon">
+                        <i class="fa-regular fa-folder-open"></i>
+                    </div>
+                    <h4>لا توجد معاملات مالية مطابقة</h4>
+                    <p>ابدأ بإضافة معاملة دخل أو مصروف جديدة، أو قم بمسح فلاتر البحث الحالية.</p>
+                    <button type="button" class="btn btn-primary" onclick="UI.openTxModal()">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>إضافة أول معاملة</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <!-- ========================================================================
+         MODAL: ADD / EDIT TRANSACTION
+         ======================================================================== -->
+    <div id="tx-modal" class="modal-backdrop hidden" onclick="if(event.target === this) UI.closeTxModal()">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="tx-modal-title">إضافة معاملة جديدة</h3>
+                <button type="button" class="modal-close" onclick="UI.closeTxModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="tx-form" onsubmit="handleTxSubmit(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="tx-id">
+
+                    <!-- Expense / Income Toggle -->
+                    <div class="type-switcher">
+                        <button type="button" id="btn-type-expense" class="type-switch-btn active-expense" onclick="UI.setModalTxType('expense')">
+                            <i class="fa-solid fa-arrow-trend-down"></i>
+                            <span>مصروف</span>
+                        </button>
+                        <button type="button" id="btn-type-income" class="type-switch-btn" onclick="UI.setModalTxType('income')">
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                            <span>دخل</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-two-cols">
+                        <div class="form-group">
+                            <label class="form-label" for="tx-amount">المبلغ</label>
+                            <input type="number" id="tx-amount" class="form-control no-icon" placeholder="0.00" step="0.01" min="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="tx-date">التاريخ</label>
+                            <input type="date" id="tx-date" class="form-control no-icon" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="tx-category">الفئة</label>
+                        <select id="tx-category" class="select-control" required></select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="tx-description">الوصف / البيان</label>
+                        <input type="text" id="tx-description" class="form-control no-icon" placeholder="مثال: فاتورة الكهرباء، راتب الشهر، مشتريات..." required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="UI.closeTxModal()">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check"></i>
+                        <span id="tx-submit-label">حفظ المعاملة</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- ========================================================================
+         JAVASCRIPT LOGIC (FIREBASE v10.12.2 MODULAR SDK + CHARTS + EXPORTS)
+         ======================================================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            updateProfile,
+            signInWithPopup,
+            GoogleAuthProvider,
+            signOut,
+            onAuthStateChanged,
+            setPersistence,
+            browserLocalPersistence,
+            browserSessionPersistence
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // Firebase Configuration (Project: my-site-ebdc9)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDr52CHQIBq05XCq_YoOhhp8akTwqngPPk",
+            authDomain: "my-site-ebdc9.firebaseapp.com",
+            projectId: "my-site-ebdc9",
+            storageBucket: "my-site-ebdc9.firebasestorage.app",
+            messagingSenderId: "391429914437",
+            appId: "1:391429914437:web:d6671a39e774e94890c82c"
+        };
+
+        const firebaseApp = initializeApp(firebaseConfig);
+        const auth = getAuth(firebaseApp);
+        auth.languageCode = 'ar';
+        const googleProvider = new GoogleAuthProvider();
+
+        /* ======================================================================
+           1. AUTHENTICATION SERVICE (Firebase v10 + Demo Mode)
+           ====================================================================== */
+        const AuthService = {
+            DEMO_KEY: 'mizan_demo_session_v3',
+            currentUser: null,
+
+            init() {
+                const demoRaw = sessionStorage.getItem(this.DEMO_KEY);
+                if (demoRaw) {
+                    try {
+                        this.currentUser = JSON.parse(demoRaw);
+                        UI.showDashboard();
+                    } catch (e) {
+                        sessionStorage.removeItem(this.DEMO_KEY);
+                    }
+                }
+
+                onAuthStateChanged(auth, (fbUser) => {
+                    if (fbUser) {
+                        sessionStorage.removeItem(this.DEMO_KEY);
+                        this.currentUser = {
+                            uid: fbUser.uid,
+                            name: fbUser.displayName || fbUser.email.split('@')[0],
+                            email: fbUser.email,
+                            photoURL: fbUser.photoURL || null,
+                            isDemo: false
+                        };
+                        UI.showDashboard();
+                    } else if (!sessionStorage.getItem(this.DEMO_KEY)) {
+                        this.currentUser = null;
+                        UI.showAuth();
+                    }
+                });
+            },
+
+            translateError(error) {
+                const code = error?.code || '';
+                switch (code) {
+                    case 'auth/invalid-credential':
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                    case 'auth/email-already-in-use':
+                        return 'هذا البريد الإلكتروني مسجل مسبقاً، يرجى تسجيل الدخول.';
+                    case 'auth/weak-password':
+                        return 'كلمة المرور ضعيفة، يجب أن تتكون من 6 أحرف على الأقل.';
+                    case 'auth/invalid-email':
+                        return 'يرجى إدخال بريد إلكتروني صحيح.';
+                    case 'auth/too-many-requests':
+                        return 'تم إيقاف المحاولات مؤقتاً لكثرة المحاولات الخاطئة. حاول بعد قليل.';
+                    case 'auth/popup-closed-by-user':
+                        return 'تم إغلاق نافذة تسجيل الدخول بحساب Google قبل إتمام العملية.';
+                    case 'auth/unauthorized-domain':
+                        return 'هذا النطاق غير مضاف في Authorized Domains بلوحة Firebase. استخدم "معاينة سريعة" أو أضف النطاق.';
+                    case 'auth/network-request-failed':
+                        return 'تعذر الاتصال بالشبكة، يرجى التحقق من اتصال الإنترنت.';
+                    default:
+                        return error?.message || 'حدث خطأ أثناء المصادقة، يرجى المحاولة مرة أخرى.';
+                }
+            },
+
+            async login(email, password, remember = true) {
+                UI.clearAuthError();
+                const btn = document.getElementById('auth-submit-btn');
+                try {
+                    btn.disabled = true;
+                    await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+                    await signInWithEmailAndPassword(auth, email, password);
+                    UI.showToast('تم تسجيل الدخول بنجاح!', 'success');
+                } catch (err) {
+                    UI.showAuthError(this.translateError(err));
+                } finally {
+                    btn.disabled = false;
+                }
+            },
+
+            async register(name, email, password) {
+                UI.clearAuthError();
+                const btn = document.getElementById('auth-submit-btn');
+                try {
+                    if (!name) throw { message: 'يرجى إدخال الاسم الكامل.' };
+                    btn.disabled = true;
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    await updateProfile(cred.user, { displayName: name });
+                    this.currentUser = {
+                        uid: cred.user.uid,
+                        name: name,
+                        email: email,
+                        photoURL: null,
+                        isDemo: false
+                    };
+                    UI.showToast(`مرحباً بك يا ${name}! تم إنشاء حسابك بنجاح.`, 'success');
+                    UI.showDashboard();
+                } catch (err) {
+                    UI.showAuthError(this.translateError(err));
+                } finally {
+                    btn.disabled = false;
+                }
+            },
+
+            async loginWithGoogle() {
+                UI.clearAuthError();
+                try {
+                    await signInWithPopup(auth, googleProvider);
+                    UI.showToast('تم تسجيل الدخول بحساب Google بنجاح!', 'success');
+                } catch (err) {
+                    UI.showAuthError(this.translateError(err));
+                }
+            },
+
+            loginDemo() {
+                UI.clearAuthError();
+                const demoUser = {
+                    uid: 'demo_user_mizan',
+                    name: 'أحمد المنصور (وضع التجربة)',
+                    email: 'demo@mizan-finance.com',
+                    photoURL: null,
+                    isDemo: true
+                };
+                this.currentUser = demoUser;
+                sessionStorage.setItem(this.DEMO_KEY, JSON.stringify(demoUser));
+                UI.showToast('تم الدخول إلى وضع التجربة بنجاح', 'success');
+                UI.showDashboard();
+            },
+
+            async logout() {
+                try {
+                    sessionStorage.removeItem(this.DEMO_KEY);
+                    if (auth.currentUser) {
+                        await signOut(auth);
+                    }
+                    this.currentUser = null;
+                    UI.showToast('تم تسجيل الخروج بنجاح', 'info');
+                    UI.showAuth();
+                } catch (err) {
+                    UI.showToast('حدث خطأ أثناء تسجيل الخروج', 'error');
+                }
+            }
+        };
+
+        /* ======================================================================
+           2. APPLICATION DATA & STATE MANAGEMENT
+           ====================================================================== */
+        const App = {
+            STORAGE_PREFIX: 'mizan_tx_v3',
+            CURRENCY_KEY: 'mizan_currency_v3',
+            currency: 'SAR',
+            transactions: [],
+            filteredTransactions: [],
+            monthlyChartInstance: null,
+            categoryChartInstance: null,
+
+            currencies: {
+                SAR: { symbol: 'ر.س', name: 'ريال سعودي' },
+                EGP: { symbol: 'ج.م', name: 'جنيه مصري' },
+                USD: { symbol: '$', name: 'دولار أمريكي' },
+                AED: { symbol: 'د.إ', name: 'درهم إماراتي' }
+            },
+
+            categories: {
+                expense: [
+                    { id: 'food', label: 'طعام ومطاعم', icon: 'fa-utensils', color: '#E11D48', bg: '#FFF1F2' },
+                    { id: 'housing', label: 'سكن وفواتير', icon: 'fa-house', color: '#2563EB', bg: '#EFF6FF' },
+                    { id: 'transport', label: 'مواصلات ووقود', icon: 'fa-car', color: '#D97706', bg: '#FFFBEB' },
+                    { id: 'shopping', label: 'تسوق وملابس', icon: 'fa-bag-shopping', color: '#7C3AED', bg: '#F5F3FF' },
+                    { id: 'health', label: 'صحة وعلاج', icon: 'fa-heart-pulse', color: '#0891B2', bg: '#ECFEFF' },
+                    { id: 'education', label: 'تعليم وتطوير', icon: 'fa-graduation-cap', color: '#4F46E5', bg: '#EEF2FF' },
+                    { id: 'other_exp', label: 'مصروفات أخرى', icon: 'fa-receipt', color: '#475569', bg: '#F1F5F9' }
+                ],
+                income: [
+                    { id: 'salary', label: 'الراتب الشهري', icon: 'fa-briefcase', color: '#059669', bg: '#ECFDF5' },
+                    { id: 'freelance', label: 'عمل حر ومشاريع', icon: 'fa-laptop-code', color: '#0D9488', bg: '#F0FDFA' },
+                    { id: 'investment', label: 'استثمارات وأرباح', icon: 'fa-chart-line', color: '#16A34A', bg: '#F0FDF4' },
+                    { id: 'bonus', label: 'مكافآت وحوافز', icon: 'fa-gift', color: '#0284C7', bg: '#F0F9FF' },
+                    { id: 'other_inc', label: 'دخل إضافي', icon: 'fa-coins', color: '#65A30D', bg: '#F7FEE7' }
+                ]
+            },
+
+            getStorageKey() {
+                const uid = AuthService.currentUser?.uid || 'guest';
+                return `${this.STORAGE_PREFIX}_${uid}`;
+            },
+
+            getCategoryMeta(type, catId) {
+                const list = this.categories[type] || [];
+                return list.find(c => c.id === catId) || {
+                    id: catId,
+                    label: 'عام',
+                    icon: 'fa-tag',
+                    color: '#475569',
+                    bg: '#F1F5F9'
+                };
+            },
+
+            getSampleData() {
+                const now = new Date();
+                const y = now.getFullYear();
+                const m = String(now.getMonth() + 1).padStart(2, '0');
+                const prevM = now.getMonth() === 0 ? '12' : String(now.getMonth()).padStart(2, '0');
+                const prevY = now.getMonth() === 0 ? y - 1 : y;
+
+                return [
+                    { id: 'tx_1', type: 'income', amount: 14500, category: 'salary', date: `${y}-${m}-01`, description: 'الراتب الشهري الأساسي' },
+                    { id: 'tx_2', type: 'expense', amount: 3200, category: 'housing', date: `${y}-${m}-03`, description: 'إيجار الشقة وفاتورة الكهرباء' },
+                    { id: 'tx_3', type: 'expense', amount: 1150, category: 'food', date: `${y}-${m}-06`, description: 'مقاضي السوبرماركت الأسبوعية' },
+                    { id: 'tx_4', type: 'income', amount: 2800, category: 'freelance', date: `${y}-${m}-10`, description: 'تصميم موقع إلكتروني لعميل' },
+                    { id: 'tx_5', type: 'expense', amount: 650, category: 'transport', date: `${y}-${m}-12`, description: 'وقود وصيانة دورية للسيارة' },
+                    { id: 'tx_6', type: 'expense', amount: 980, category: 'shopping', date: `${y}-${m}-15`, description: 'مستلزمات شخصية وملابس' },
+                    { id: 'tx_7', type: 'expense', amount: 420, category: 'health', date: `${y}-${m}-18`, description: 'فحص طبي وصيدلية' },
+                    { id: 'tx_8', type: 'income', amount: 14500, category: 'salary', date: `${prevY}-${prevM}-01`, description: 'راتب الشهر السابق' },
+                    { id: 'tx_9', type: 'expense', amount: 4800, category: 'housing', date: `${prevY}-${prevM}-05`, description: 'فواتير والتزامات منزلية' },
+                    { id: 'tx_10', type: 'expense', amount: 1600, category: 'food', date: `${prevY}-${prevM}-14`, description: 'مطاعم وضيافة' }
+                ];
+            },
+
+            init() {
+                const savedCur = localStorage.getItem(this.CURRENCY_KEY);
+                if (savedCur && this.currencies[savedCur]) {
+                    this.currency = savedCur;
+                }
+                const curSel = document.getElementById('currency-select');
+                if (curSel) curSel.value = this.currency;
+
+                const raw = localStorage.getItem(this.getStorageKey());
+                if (raw) {
+                    try {
+                        this.transactions = JSON.parse(raw);
+                    } catch (e) {
+                        this.transactions = this.getSampleData();
+                    }
+                } else {
+                    this.transactions = this.getSampleData();
+                    this.save();
+                }
+
+                this.populateFilterOptions();
+                this.applyFilters();
+            },
+
+            save() {
+                localStorage.setItem(this.getStorageKey(), JSON.stringify(this.transactions));
+            },
+
+            changeCurrency(newCur) {
+                if (!this.currencies[newCur]) return;
+                this.currency = newCur;
+                localStorage.setItem(this.CURRENCY_KEY, newCur);
+                this.renderAll();
+                UI.showToast(`تم تغيير العملة إلى ${this.currencies[newCur].name}`, 'info');
+            },
+
+            formatMoney(val) {
+                const num = Number(val) || 0;
+                const sym = this.currencies[this.currency]?.symbol || 'ر.س';
+                const formatted = num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                return `${formatted} ${sym}`;
+            },
+
+            populateFilterOptions() {
+                const catSelect = document.getElementById('filter-category');
+                const currentCat = catSelect.value;
+                catSelect.innerHTML = '<option value="all">جميع الفئات</option>';
+
+                const allCats = [...this.categories.expense, ...this.categories.income];
+                allCats.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.label;
+                    catSelect.appendChild(opt);
+                });
+                if ([...catSelect.options].some(o => o.value === currentCat)) {
+                    catSelect.value = currentCat;
+                }
+
+                // Populate unique months
+                const monthSelect = document.getElementById('filter-month');
+                const currentMonth = monthSelect.value;
+                monthSelect.innerHTML = '<option value="all">جميع الأشهر</option>';
+
+                const monthSet = new Set(this.transactions.map(t => t.date.slice(0, 7)));
+                const sortedMonths = Array.from(monthSet).sort().reverse();
+                const arabicMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+
+                sortedMonths.forEach(ym => {
+                    const [yr, mo] = ym.split('-');
+                    const mName = arabicMonths[parseInt(mo, 10) - 1] || mo;
+                    const opt = document.createElement('option');
+                    opt.value = ym;
+                    opt.textContent = `${mName} ${yr}`;
+                    monthSelect.appendChild(opt);
+                });
+
+                if ([...monthSelect.options].some(o => o.value === currentMonth)) {
+                    monthSelect.value = currentMonth;
+                }
+            },
+
+            applyFilters() {
+                const search = document.getElementById('filter-search').value.trim().toLowerCase();
+                const type = document.getElementById('filter-type').value;
+                const category = document.getElementById('filter-category').value;
+                const month = document.getElementById('filter-month').value;
+
+                this.filteredTransactions = this.transactions
+                    .filter(tx => {
+                        if (type !== 'all' && tx.type !== type) return false;
+                        if (category !== 'all' && tx.category !== category) return false;
+                        if (month !== 'all' && !tx.date.startsWith(month)) return false;
+                        if (search) {
+                            const catLabel = this.getCategoryMeta(tx.type, tx.category).label.toLowerCase();
+                            const desc = (tx.description || '').toLowerCase();
+                            if (!desc.includes(search) && !catLabel.includes(search)) return false;
+                        }
+                        return true;
+                    })
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                this.renderAll();
+            },
+
+            resetFilters() {
+                document.getElementById('filter-search').value = '';
+                document.getElementById('filter-type').value = 'all';
+                document.getElementById('filter-category').value = 'all';
+                document.getElementById('filter-month').value = 'all';
+                this.applyFilters();
+            },
+
+            saveTransaction(data) {
+                if (data.id) {
+                    const idx = this.transactions.findIndex(t => t.id === data.id);
+                    if (idx !== -1) {
+                        this.transactions[idx] = { ...this.transactions[idx], ...data };
+                        UI.showToast('تم تحديث المعاملة بنجاح', 'success');
+                    }
+                } else {
+                    const newTx = {
+                        ...data,
+                        id: 'tx_' + Date.now()
+                    };
+                    this.transactions.unshift(newTx);
+                    UI.showToast('تمت إضافة المعاملة بنجاح', 'success');
+                }
+                this.save();
+                this.populateFilterOptions();
+                this.applyFilters();
+            },
+
+            deleteTransaction(id) {
+                this.transactions = this.transactions.filter(t => t.id !== id);
+                this.save();
+                this.populateFilterOptions();
+                this.applyFilters();
+                UI.showToast('تم حذف المعاملة', 'info');
+            },
+
+            renderAll() {
+                this.renderKPIs();
+                this.renderTable();
+                this.renderCharts();
+            },
+
+            renderKPIs() {
+                let income = 0;
+                let expense = 0;
+                let incCount = 0;
+                let expCount = 0;
+
+                this.filteredTransactions.forEach(t => {
+                    const val = Number(t.amount) || 0;
+                    if (t.type === 'income') {
+                        income += val;
+                        incCount++;
+                    } else {
+                        expense += val;
+                        expCount++;
+                    }
+                });
+
+                const balance = income - expense;
+                const savingsRate = income > 0 ? Math.max(0, Math.min(100, Math.round(((income - expense) / income) * 100))) : 0;
+
+                document.getElementById('kpi-balance').textContent = this.formatMoney(balance);
+                document.getElementById('kpi-income').textContent = this.formatMoney(income);
+                document.getElementById('kpi-expense').textContent = this.formatMoney(expense);
+
+                document.getElementById('kpi-income-count').textContent = `${incCount} عمليات دخل`;
+                document.getElementById('kpi-expense-count').textContent = `${expCount} عمليات مصروف`;
+
+                const badge = document.getElementById('kpi-balance-badge');
+                if (balance >= 0) {
+                    badge.className = 'status-badge surplus';
+                    badge.textContent = 'فائض مالي';
+                } else {
+                    badge.className = 'status-badge deficit';
+                    badge.textContent = 'عجز مالي';
+                }
+
+                document.getElementById('kpi-savings-rate').textContent = `${savingsRate}%`;
+                document.getElementById('kpi-savings-bar').style.width = `${savingsRate}%`;
+            },
+
+            renderTable() {
+                const tbody = document.getElementById('tx-table-body');
+                const emptyState = document.getElementById('tx-empty-state');
+                tbody.innerHTML = '';
+
+                if (this.filteredTransactions.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+                emptyState.classList.add('hidden');
+
+                this.filteredTransactions.forEach(tx => {
+                    const cat = this.getCategoryMeta(tx.type, tx.category);
+                    const tr = document.createElement('tr');
+
+                    const sign = tx.type === 'income' ? '+' : '-';
+                    const typeLabel = tx.type === 'income' ? 'دخل' : 'مصروف';
+                    const typeIcon = tx.type === 'income' ? 'fa-arrow-up' : 'fa-arrow-down';
+
+                    tr.innerHTML = `
+                        <td class="tx-date">${tx.date}</td>
+                        <td class="tx-desc">${this.escapeHtml(tx.description)}</td>
+                        <td>
+                            <span class="cat-badge" style="background: ${cat.bg}; color: ${cat.color};">
+                                <i class="fa-solid ${cat.icon}"></i>
+                                <span>${cat.label}</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="type-pill ${tx.type}">
+                                <i class="fa-solid ${typeIcon}"></i>
+                                <span>${typeLabel}</span>
+                            </span>
+                        </td>
+                        <td class="tx-amount ${tx.type}">${sign} ${this.formatMoney(tx.amount)}</td>
+                        <td>
+                            <div class="row-actions">
+                                <button type="button" class="icon-action-btn edit" title="تعديل" onclick="UI.openTxModal('${tx.id}')">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button type="button" class="icon-action-btn delete" title="حذف" onclick="App.deleteTransaction('${tx.id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            },
+
+            renderCharts() {
+                Chart.defaults.font.family = "'Cairo', 'Tajawal', sans-serif";
+                Chart.defaults.color = '#475569';
+
+                // 1. Monthly Bar Chart
+                const monthMap = {};
+                this.transactions.forEach(tx => {
+                    const ym = tx.date.slice(0, 7);
+                    if (!monthMap[ym]) monthMap[ym] = { income: 0, expense: 0 };
+                    monthMap[ym][tx.type] += Number(tx.amount) || 0;
+                });
+
+                const sortedMonths = Object.keys(monthMap).sort().slice(-6);
+                const arabicMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+
+                const labels = sortedMonths.map(ym => {
+                    const [yr, mo] = ym.split('-');
+                    return `${arabicMonths[parseInt(mo, 10) - 1]} ${yr}`;
+                });
+
+                const incomeData = sortedMonths.map(ym => monthMap[ym].income);
+                const expenseData = sortedMonths.map(ym => monthMap[ym].expense);
+
+                const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+                if (this.monthlyChartInstance) {
+                    this.monthlyChartInstance.destroy();
+                }
+
+                this.monthlyChartInstance = new Chart(monthlyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels.length ? labels : ['لا توجد بيانات'],
+                        datasets: [
+                            {
+                                label: 'الدخل',
+                                data: incomeData.length ? incomeData : [0],
+                                backgroundColor: '#10B981',
+                                borderRadius: 8,
+                                barPercentage: 0.55,
+                                categoryPercentage: 0.65
+                            },
+                            {
+                                label: 'المصروفات',
+                                data: expenseData.length ? expenseData : [0],
+                                backgroundColor: '#F43F5E',
+                                borderRadius: 8,
+                                barPercentage: 0.55,
+                                categoryPercentage: 0.65
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                align: 'end',
+                                labels: { usePointStyle: true, pointStyle: 'circle', padding: 16, font: { weight: '700', size: 12 } }
+                            },
+                            tooltip: {
+                                rtl: true,
+                                textDirection: 'rtl'
+                            }
+                        },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: '#F1F5F9' },
+                                border: { display: false }
+                            }
+                        }
+                    }
+                });
+
+                // 2. Category Doughnut Chart (Expenses breakdown)
+                const catTotals = {};
+                this.filteredTransactions
+                    .filter(t => t.type === 'expense')
+                    .forEach(t => {
+                        catTotals[t.category] = (catTotals[t.category] || 0) + (Number(t.amount) || 0);
+                    });
+
+                const catKeys = Object.keys(catTotals);
+                const catLabels = catKeys.map(k => this.getCategoryMeta('expense', k).label);
+                const catValues = catKeys.map(k => catTotals[k]);
+                const catColors = catKeys.map(k => this.getCategoryMeta('expense', k).color);
+
+                const catCtx = document.getElementById('categoryChart').getContext('2d');
+                if (this.categoryChartInstance) {
+                    this.categoryChartInstance.destroy();
+                }
+
+                this.categoryChartInstance = new Chart(catCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: catLabels.length ? catLabels : ['لا توجد مصروفات'],
+                        datasets: [{
+                            data: catValues.length ? catValues : [1],
+                            backgroundColor: catColors.length ? catColors : ['#E2E8F0'],
+                            borderWidth: 2,
+                            borderColor: '#FFFFFF',
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '66%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    padding: 14,
+                                    font: { weight: '700', size: 11.5 }
+                                }
+                            },
+                            tooltip: {
+                                rtl: true,
+                                textDirection: 'rtl'
+                            }
+                        }
+                    }
+                });
+            },
+
+            escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+        };
+
+        /* ======================================================================
+           3. EXPORT SERVICE (EXCEL RTL + CLEAN ARABIC A4 PDF)
+           ====================================================================== */
+        const ExportService = {
+            exportExcel() {
+                if (!App.filteredTransactions.length) {
+                    UI.showToast('لا توجد معاملات لتصديرها حالياً', 'error');
+                    return;
+                }
+
+                let totalIncome = 0;
+                let totalExpense = 0;
+
+                const rows = App.filteredTransactions.map(tx => {
+                    const amt = Number(tx.amount) || 0;
+                    if (tx.type === 'income') totalIncome += amt;
+                    else totalExpense += amt;
+
+                    return {
+                        'التاريخ': tx.date,
+                        'الوصف': tx.description,
+                        'الفئة': App.getCategoryMeta(tx.type, tx.category).label,
+                        'النوع': tx.type === 'income' ? 'دخل' : 'مصروف',
+                        'المبلغ': amt,
+                        'العملة': App.currencies[App.currency].symbol
+                    };
+                });
+
+                // Summary Rows
+                rows.push({});
+                rows.push({ 'التاريخ': 'إجمالي الدخل', 'المبلغ': totalIncome, 'العملة': App.currencies[App.currency].symbol });
+                rows.push({ 'التاريخ': 'إجمالي المصروفات', 'المبلغ': totalExpense, 'العملة': App.currencies[App.currency].symbol });
+                rows.push({ 'التاريخ': 'صافي الرصيد', 'المبلغ': totalIncome - totalExpense, 'العملة': App.currencies[App.currency].symbol });
+
+                const worksheet = XLSX.utils.json_to_sheet(rows);
+                worksheet['!cols'] = [
+                    { wch: 16 },
+                    { wch: 34 },
+                    { wch: 20 },
+                    { wch: 14 },
+                    { wch: 16 },
+                    { wch: 10 }
+                ];
+
+                const workbook = XLSX.utils.book_new();
+                workbook.Workbook = { Views: [{ RTL: true }] };
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'التقرير المالي');
+
+                const dateStr = new Date().toISOString().slice(0, 10);
+                XLSX.writeFile(workbook, `تقرير_ميزان_المالي_${dateStr}.xlsx`);
+                UI.showToast('تم تحميل ملف Excel بنجاح', 'success');
+            },
+
+            exportPDF() {
+                if (!App.filteredTransactions.length) {
+                    UI.showToast('لا توجد معاملات لتصديرها حالياً', 'error');
+                    return;
+                }
+
+                UI.showToast('جاري تجهيز التقرير المالي بصيغة PDF...', 'info');
+
+                let income = 0;
+                let expense = 0;
+                App.filteredTransactions.forEach(t => {
+                    if (t.type === 'income') income += Number(t.amount) || 0;
+                    else expense += Number(t.amount) || 0;
+                });
+                const balance = income - expense;
+
+                const userName = AuthService.currentUser?.name || 'مستخدم مِيزان';
+                const today = new Date().toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+
+                const tableRowsHtml = App.filteredTransactions.map(tx => {
+                    const cat = App.getCategoryMeta(tx.type, tx.category).label;
+                    const typeText = tx.type === 'income' ? 'دخل' : 'مصروف';
+                    const color = tx.type === 'income' ? '#059669' : '#E11D48';
+                    const sign = tx.type === 'income' ? '+' : '-';
+                    return `
+                        <tr>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0;">${tx.date}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0; font-weight: 700;">${App.escapeHtml(tx.description)}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0;">${cat}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0;">${typeText}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0; color: ${color}; font-weight: 700; direction: ltr; text-align: right;">${sign} ${App.formatMoney(tx.amount)}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                const reportElement = document.createElement('div');
+                reportElement.setAttribute('dir', 'rtl');
+                reportElement.style.cssText = `
+                    font-family: 'Cairo', 'Tajawal', sans-serif;
+                    direction: rtl;
+                    text-align: right;
+                    color: #0F172A;
+                    background: #FFFFFF;
+                    padding: 28px;
+                    width: 100%;
+                `;
+
+                reportElement.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #059669; padding-bottom: 16px; margin-bottom: 22px;">
+                        <div>
+                            <h1 style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0 0 4px;">مِيزان | التقرير المالي التفصيلي</h1>
+                            <p style="font-size: 13px; color: #475569; margin: 0;">إعداد: ${App.escapeHtml(userName)}</p>
+                        </div>
+                        <div style="text-align: left; font-size: 12.5px; color: #475569;">
+                            <div>تاريخ الإصدار: ${today}</div>
+                            <div>عدد المعاملات: ${App.filteredTransactions.length}</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                        <div style="flex: 1; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
+                            <div style="font-size: 12px; color: #475569; margin-bottom: 4px;">صافي الرصيد</div>
+                            <div style="font-size: 17px; font-weight: 800; color: #0F172A; direction: ltr; text-align: right;">${App.formatMoney(balance)}</div>
+                        </div>
+                        <div style="flex: 1; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 14px;">
+                            <div style="font-size: 12px; color: #047857; margin-bottom: 4px;">إجمالي الدخل</div>
+                            <div style="font-size: 17px; font-weight: 800; color: #059669; direction: ltr; text-align: right;">${App.formatMoney(income)}</div>
+                        </div>
+                        <div style="flex: 1; background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 14px;">
+                            <div style="font-size: 12px; color: #BE123C; margin-bottom: 4px;">إجمالي المصروفات</div>
+                            <div style="font-size: 17px; font-weight: 800; color: #E11D48; direction: ltr; text-align: right;">${App.formatMoney(expense)}</div>
+                        </div>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right;">
+                        <thead>
+                            <tr style="background: #0F172A; color: #FFFFFF;">
+                                <th style="padding: 10px;">التاريخ</th>
+                                <th style="padding: 10px;">الوصف</th>
+                                <th style="padding: 10px;">الفئة</th>
+                                <th style="padding: 10px;">النوع</th>
+                                <th style="padding: 10px;">المبلغ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRowsHtml}
+                        </tbody>
+                    </table>
+                `;
+
+                const dateStr = new Date().toISOString().slice(0, 10);
+                const opt = {
+                    margin: 10,
+                    filename: `تقرير_ميزان_المالي_${dateStr}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, letterRendering: false },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(reportElement).save().then(() => {
+                    UI.showToast('تم تصدير تقرير PDF بنجاح', 'success');
+                });
+            }
+        };
+
+        /* ======================================================================
+           4. UI CONTROLLERS (MODALS, AUTH TABS, TOASTS)
+           ====================================================================== */
+        const UI = {
+            authMode: 'login',
+            modalTxType: 'expense',
+
+            switchAuthTab(mode) {
+                this.authMode = mode;
+                this.clearAuthError();
+
+                const loginTab = document.getElementById('tab-login');
+                const regTab = document.getElementById('tab-register');
+                const nameGroup = document.getElementById('name-field-group');
+                const nameInput = document.getElementById('auth-name');
+                const rememberRow = document.getElementById('remember-row');
+                const heading = document.getElementById('auth-heading');
+                const subheading = document.getElementById('auth-subheading');
+                const submitText = document.getElementById('auth-submit-text');
+
+                if (mode === 'login') {
+                    loginTab.classList.add('active');
+                    regTab.classList.remove('active');
+                    nameGroup.classList.add('hidden');
+                    nameInput.required = false;
+                    rememberRow.classList.remove('hidden');
+                    heading.textContent = 'مرحباً بعودتك!';
+                    subheading.textContent = 'سجّل دخولك للوصول إلى لوحة التحكم وتقاريرك المالية';
+                    submitText.textContent = 'تسجيل الدخول';
+                } else {
+                    regTab.classList.add('active');
+                    loginTab.classList.remove('active');
+                    nameGroup.classList.remove('hidden');
+                    nameInput.required = true;
+                    rememberRow.classList.add('hidden');
+                    heading.textContent = 'إنشاء حساب جديد';
+                    subheading.textContent = 'ابدأ رحلتك في تنظيم مصروفاتك وتحقيق أهدافك الادخارية';
+                    submitText.textContent = 'إنشاء الحساب';
+                }
+            },
+
+            togglePasswordVisibility() {
+                const input = document.getElementById('auth-password');
+                const icon = document.getElementById('pass-eye-icon');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fa-regular fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fa-regular fa-eye';
+                }
+            },
+
+            showAuthError(msg) {
+                const box = document.getElementById('auth-error-box');
+                const text = document.getElementById('auth-error-text');
+                text.textContent = msg;
+                box.classList.remove('hidden');
+            },
+
+            clearAuthError() {
+                document.getElementById('auth-error-box').classList.add('hidden');
+            },
+
+            showAuth() {
+                document.getElementById('dashboard-view').classList.add('hidden');
+                document.getElementById('auth-view').classList.remove('hidden');
+            },
+
+            showDashboard() {
+                document.getElementById('auth-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.remove('hidden');
+
+                const user = AuthService.currentUser;
+                if (user) {
+                    document.getElementById('user-display-name').textContent = user.name;
+                    document.getElementById('user-display-email').textContent = user.email;
+
+                    const avatarBox = document.getElementById('user-avatar-box');
+                    if (user.photoURL) {
+                        avatarBox.innerHTML = `<img src="${user.photoURL}" alt="${App.escapeHtml(user.name)}" onerror="this.parentElement.textContent='${App.escapeHtml((user.name || 'م').charAt(0))}'">`;
+                    } else {
+                        avatarBox.textContent = (user.name || 'م').charAt(0).toUpperCase();
+                    }
+                }
+
+                App.init();
+            },
+
+            openTxModal(editId = null) {
+                const modal = document.getElementById('tx-modal');
+                const title = document.getElementById('tx-modal-title');
+                const submitLabel = document.getElementById('tx-submit-label');
+
+                if (editId) {
+                    const tx = App.transactions.find(t => t.id === editId);
+                    if (!tx) return;
+                    title.textContent = 'تعديل المعاملة المالية';
+                    submitLabel.textContent = 'حفظ التعديلات';
+                    document.getElementById('tx-id').value = tx.id;
+                    this.setModalTxType(tx.type);
+                    document.getElementById('tx-amount').value = tx.amount;
+                    document.getElementById('tx-date').value = tx.date;
+                    document.getElementById('tx-category').value = tx.category;
+                    document.getElementById('tx-description').value = tx.description;
+                } else {
+                    title.textContent = 'إضافة معاملة جديدة';
+                    submitLabel.textContent = 'حفظ المعاملة';
+                    document.getElementById('tx-id').value = '';
+                    this.setModalTxType('expense');
+                    document.getElementById('tx-amount').value = '';
+                    document.getElementById('tx-date').value = new Date().toISOString().slice(0, 10);
+                    document.getElementById('tx-description').value = '';
+                }
+
+                modal.classList.remove('hidden');
+            },
+
+            closeTxModal() {
+                document.getElementById('tx-modal').classList.add('hidden');
+            },
+
+            setModalTxType(type) {
+                this.modalTxType = type;
+                const expBtn = document.getElementById('btn-type-expense');
+                const incBtn = document.getElementById('btn-type-income');
+
+                if (type === 'expense') {
+                    expBtn.className = 'type-switch-btn active-expense';
+                    incBtn.className = 'type-switch-btn';
+                } else {
+                    incBtn.className = 'type-switch-btn active-income';
+                    expBtn.className = 'type-switch-btn';
+                }
+
+                const catSelect = document.getElementById('tx-category');
+                catSelect.innerHTML = '';
+                App.categories[type].forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.label;
+                    catSelect.appendChild(opt);
+                });
+            },
+
+            showToast(message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast-item ${type}`;
+
+                const iconClass = type === 'success'
+                    ? 'fa-circle-check'
+                    : type === 'error'
+                        ? 'fa-circle-exclamation'
+                        : 'fa-circle-info';
+
+                toast.innerHTML = `<i class="fa-solid ${iconClass}"></i><span>${App.escapeHtml(message)}</span>`;
+                container.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(8px)';
+                    toast.style.transition = 'all 0.25s ease';
+                    setTimeout(() => toast.remove(), 260);
+                }, 3200);
+            }
+        };
+
+        // Expose Global Handlers for HTML Inline Attributes
+        window.AuthService = AuthService;
+        window.App = App;
+        window.UI = UI;
+        window.ExportService = ExportService;
+
+        window.handleAuthSubmit = function (e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+
+            if (UI.authMode === 'login') {
+                const remember = document.getElementById('auth-remember').checked;
+                AuthService.login(email, password, remember);
+            } else {
+                const name = document.getElementById('auth-name').value.trim();
+                AuthService.register(name, email, password);
+            }
+        };
+
+        window.handleTxSubmit = function (e) {
+            e.preventDefault();
+            const id = document.getElementById('tx-id').value;
+            const amount = parseFloat(document.getElementById('tx-amount').value);
+            const date = document.getElementById('tx-date').value;
+            const category = document.getElementById('tx-category').value;
+            const description = document.getElementById('tx-description').value.trim();
+
+            if (!amount || amount <= 0) {
+                UI.showToast('يرجى إدخال مبلغ صحيح أكبر من الصفر', 'error');
+                return;
+            }
+
+            App.saveTransaction({
+                id: id || null,
+                type: UI.modalTxType,
+                amount,
+                date,
+                category,
+                description
+            });
+
+            UI.closeTxModal();
+        };
+
+        // Initialize Application
+        window.addEventListener('DOMContentLoaded', () => {
+            AuthService.init();
+        });
+    </script>
+</body>
+</html>
