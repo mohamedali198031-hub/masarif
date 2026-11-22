@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مِيزان | نظام إدارة المصروفات الذكي</title>
+    <title>مِيزان المالي | نظام إدارة المصروفات الذكي</title>
 
     <!-- Google Fonts: Cairo & Tajawal -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,44 +24,46 @@
 
     <style>
         /* ==========================================================================
-           1. CSS VARIABLES & RESET (Ultra-Clean & Polished RTL Design System)
+           1. LUXURIOUS WARM BEIGE & SAND DESIGN SYSTEM (RTL)
            ========================================================================== */
         :root {
-            --bg-main: #F4F7FA;
-            --bg-surface: #FFFFFF;
-            --bg-subtle: #F8FAFC;
-            --border-color: #E2E8F0;
-            --border-focus: #059669;
+            --bg-main: #FAF7F2;          /* Warm Cream Beige */
+            --bg-sand: #F3EDE2;          /* Soft Sand Beige */
+            --bg-surface: #FFFFFF;       /* Crisp Ivory Card */
+            --bg-subtle: #F7F3EB;        /* Warm Input Surface */
+            --border-color: #E5DDD0;     /* Warm Sand Border */
+            --border-strong: #D5C9B6;
 
-            --text-primary: #0F172A;
-            --text-secondary: #475569;
-            --text-muted: #94A3B8;
+            --text-primary: #2C2621;     /* Deep Espresso Charcoal */
+            --text-secondary: #6E655C;   /* Warm Taupe */
+            --text-muted: #9C9286;       /* Muted Sand Gray */
 
-            --emerald-600: #059669;
-            --emerald-700: #047857;
-            --emerald-50: #ECFDF5;
-            --emerald-100: #D1FAE5;
+            --bronze-600: #A67C52;       /* Primary Warm Bronze */
+            --bronze-700: #8C6239;       /* Deep Bronze Hover */
+            --bronze-50: #F8F3EC;
+            --bronze-100: #EFE5D6;
 
-            --slate-900: #0F172A;
-            --slate-800: #1E293B;
+            --espresso-900: #2C2621;
+            --espresso-800: #3E352E;
 
-            --coral-600: #E11D48;
-            --coral-50: #FFF1F2;
-            --coral-100: #FFE4E6;
+            --olive-600: #4A6B53;        /* Sage / Olive Income */
+            --olive-50: #EFF5F0;
+            --olive-100: #DCE9DF;
 
-            --amber-600: #D97706;
-            --amber-50: #FFFBEB;
+            --terracotta-600: #B85042;   /* Terracotta Expense */
+            --terracotta-50: #FBF1EF;
+            --terracotta-100: #F5DFDB;
 
-            --indigo-600: #4F46E5;
-            --indigo-50: #EEF2FF;
+            --amber-600: #B47B38;        /* Warm Gold Accent */
+            --amber-50: #FCF6EC;
 
-            --radius-lg: 16px;
+            --radius-lg: 18px;
             --radius-md: 12px;
             --radius-sm: 8px;
 
-            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --shadow-hover: 0 10px 25px rgba(15, 23, 42, 0.08);
-            --shadow-modal: 0 24px 48px rgba(15, 23, 42, 0.18);
+            --shadow-card: 0 4px 20px rgba(44, 38, 33, 0.04);
+            --shadow-hover: 0 10px 26px rgba(44, 38, 33, 0.08);
+            --shadow-modal: 0 24px 50px rgba(44, 38, 33, 0.22);
 
             --font-main: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
             --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
@@ -104,7 +106,7 @@
         }
 
         /* ==========================================================================
-           2. SPLIT-SCREEN AUTHENTICATION VIEW
+           2. SPLIT-SCREEN BEIGE & ESPRESSO AUTHENTICATION VIEW
            ========================================================================== */
         .auth-wrapper {
             min-height: 100vh;
@@ -112,25 +114,25 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: radial-gradient(circle at top right, #E2E8F0 0%, #F4F7FA 55%, #ECFDF5 100%);
+            background: radial-gradient(circle at top right, #EFE7D8 0%, #FAF7F2 55%, #F2EAE0 100%);
         }
 
         .auth-container {
             width: 100%;
-            max-width: 1080px;
+            max-width: 1060px;
             background: var(--bg-surface);
             border-radius: 24px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+            box-shadow: 0 22px 55px rgba(44, 38, 33, 0.09);
             display: grid;
             grid-template-columns: 1.05fr 1fr;
             overflow: hidden;
         }
 
-        /* Visual Showcase Panel (Right side in RTL) */
+        /* Visual Showcase Panel (Warm Espresso & Bronze Gradient) */
         .auth-showcase {
-            background: linear-gradient(145deg, #0F172A 0%, #1E293B 55%, #064E3B 100%);
-            color: #FFFFFF;
+            background: linear-gradient(145deg, #2C2621 0%, #43372E 55%, #6E5036 100%);
+            color: #FAF7F2;
             padding: 44px 40px;
             display: flex;
             flex-direction: column;
@@ -144,10 +146,10 @@
             position: absolute;
             top: -80px;
             left: -80px;
-            width: 260px;
-            height: 260px;
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(166, 124, 82, 0.32) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -161,44 +163,45 @@
             width: 46px;
             height: 46px;
             border-radius: 14px;
-            background: linear-gradient(135deg, #10B981, #059669);
+            background: linear-gradient(135deg, #C49A6C, #A67C52);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
             color: #FFFFFF;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+            box-shadow: 0 8px 20px rgba(166, 124, 82, 0.38);
         }
 
         .brand-title {
             font-size: 22px;
             font-weight: 800;
             letter-spacing: -0.3px;
+            color: #FAF7F2;
         }
 
         .showcase-content {
-            margin: 32px 0;
+            margin: 30px 0;
         }
 
         .showcase-content h1 {
-            font-size: 28px;
+            font-size: 27px;
             font-weight: 800;
-            line-height: 1.4;
+            line-height: 1.45;
             margin-bottom: 14px;
-            color: #F8FAFC;
+            color: #FAF7F2;
         }
 
         .showcase-content p {
             font-size: 14.5px;
-            color: #CBD5E1;
+            color: #DDD3C5;
             line-height: 1.75;
-            margin-bottom: 28px;
+            margin-bottom: 26px;
         }
 
         .showcase-stats-card {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(250, 247, 242, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 221, 208, 0.18);
             border-radius: 16px;
             padding: 18px 20px;
             margin-bottom: 24px;
@@ -209,14 +212,14 @@
             justify-content: space-between;
             align-items: center;
             font-size: 13px;
-            color: #94A3B8;
+            color: #D5C9B6;
             margin-bottom: 10px;
         }
 
         .showcase-stats-value {
             font-size: 24px;
             font-weight: 800;
-            color: #34D399;
+            color: #E3C193;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -225,10 +228,10 @@
         .showcase-pill {
             font-size: 12px;
             font-weight: 700;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 99px;
-            background: rgba(16, 185, 129, 0.2);
-            color: #6EE7B7;
+            background: rgba(166, 124, 82, 0.28);
+            color: #F3DFC1;
         }
 
         .feature-list {
@@ -243,11 +246,11 @@
             align-items: center;
             gap: 10px;
             font-size: 13.5px;
-            color: #E2E8F0;
+            color: #EDE5D8;
         }
 
         .feature-list li i {
-            color: #34D399;
+            color: #D4A872;
             font-size: 15px;
             width: 20px;
             text-align: center;
@@ -255,12 +258,12 @@
 
         .showcase-footer {
             font-size: 12px;
-            color: #94A3B8;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #B8AC9B;
+            border-top: 1px solid rgba(229, 221, 208, 0.14);
             padding-top: 16px;
         }
 
-        /* Auth Form Panel (Left side in RTL) */
+        /* Auth Form Panel */
         .auth-form-panel {
             padding: 44px 40px;
             display: flex;
@@ -272,7 +275,7 @@
         .auth-tabs {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            background: var(--bg-main);
+            background: var(--bg-sand);
             padding: 5px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
@@ -290,8 +293,8 @@
 
         .auth-tab-btn.active {
             background: var(--bg-surface);
-            color: var(--emerald-600);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            color: var(--bronze-700);
+            box-shadow: 0 2px 8px rgba(44, 38, 33, 0.08);
         }
 
         .auth-header {
@@ -310,16 +313,16 @@
             color: var(--text-secondary);
         }
 
-        /* Dedicated Alert Box inside Auth Form */
+        /* Alert Box inside Auth Form */
         .auth-alert {
             display: flex;
             align-items: flex-start;
             gap: 10px;
             padding: 12px 14px;
             border-radius: 12px;
-            background: var(--coral-50);
-            border: 1px solid #FECDD3;
-            color: #BE123C;
+            background: var(--terracotta-50);
+            border: 1px solid #EBC5BE;
+            color: var(--terracotta-600);
             font-size: 13px;
             font-weight: 600;
             margin-bottom: 18px;
@@ -344,7 +347,6 @@
             margin-bottom: 6px;
         }
 
-        /* RTL Input with Icon — Zero Overlap Guaranteed */
         .input-icon-wrap {
             position: relative;
             display: flex;
@@ -380,12 +382,12 @@
 
         .form-control:focus {
             background: var(--bg-surface);
-            border-color: var(--emerald-600);
-            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+            border-color: var(--bronze-600);
+            box-shadow: 0 0 0 4px rgba(166, 124, 82, 0.14);
         }
 
         .input-icon-wrap:focus-within .field-icon {
-            color: var(--emerald-600);
+            color: var(--bronze-700);
         }
 
         .toggle-pass-btn {
@@ -424,7 +426,7 @@
         .checkbox-label input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: var(--emerald-600);
+            accent-color: var(--bronze-600);
             cursor: pointer;
         }
 
@@ -442,20 +444,15 @@
             white-space: nowrap;
         }
 
-        .btn:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
-        }
-
         .btn-primary {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            background: linear-gradient(135deg, #A67C52 0%, #8C6239 100%);
             color: #FFFFFF;
-            box-shadow: 0 6px 18px rgba(5, 150, 105, 0.25);
+            box-shadow: 0 6px 18px rgba(140, 98, 57, 0.25);
         }
 
-        .btn-primary:hover:not(:disabled) {
+        .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 8px 22px rgba(5, 150, 105, 0.34);
+            box-shadow: 0 8px 22px rgba(140, 98, 57, 0.35);
         }
 
         .btn-full {
@@ -487,35 +484,19 @@
             font-weight: 600;
         }
 
-        .social-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn-google {
-            background: var(--bg-surface);
-            color: var(--text-primary);
-            border: 1.5px solid var(--border-color);
-        }
-
-        .btn-google:hover {
-            background: var(--bg-subtle);
-            border-color: #CBD5E1;
-        }
-
         .btn-demo {
-            background: var(--emerald-50);
-            color: var(--emerald-700);
-            border: 1px solid var(--emerald-100);
+            background: var(--bg-sand);
+            color: var(--espresso-900);
+            border: 1.5px solid var(--border-strong);
         }
 
         .btn-demo:hover {
-            background: var(--emerald-100);
+            background: var(--bronze-100);
+            border-color: var(--bronze-600);
         }
 
         /* ==========================================================================
-           3. DASHBOARD LAYOUT & TOP NAVBAR
+           3. DASHBOARD LAYOUT & WARM BEIGE NAVBAR
            ========================================================================== */
         .dashboard-wrapper {
             min-height: 100vh;
@@ -527,7 +508,7 @@
             position: sticky;
             top: 0;
             z-index: 40;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(250, 247, 242, 0.92);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
         }
@@ -553,13 +534,13 @@
             width: 42px;
             height: 42px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #059669, #0F172A);
-            color: #FFFFFF;
+            background: linear-gradient(135deg, #A67C52, #2C2621);
+            color: #FAF7F2;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.22);
+            box-shadow: 0 4px 12px rgba(44, 38, 33, 0.18);
         }
 
         .topbar-title-group h1 {
@@ -586,30 +567,30 @@
             height: 40px;
             padding: 0 14px;
             border-radius: 10px;
-            background: #ECFDF5;
-            color: #047857;
-            border: 1px solid #A7F3D0;
+            background: var(--olive-50);
+            color: var(--olive-600);
+            border: 1px solid var(--olive-100);
             font-size: 13px;
             font-weight: 700;
         }
 
         .btn-export-excel:hover {
-            background: #D1FAE5;
+            background: var(--olive-100);
         }
 
         .btn-export-pdf {
             height: 40px;
             padding: 0 14px;
             border-radius: 10px;
-            background: #FFF1F2;
-            color: #BE123C;
-            border: 1px solid #FECDD3;
+            background: var(--terracotta-50);
+            color: var(--terracotta-600);
+            border: 1px solid var(--terracotta-100);
             font-size: 13px;
             font-weight: 700;
         }
 
         .btn-export-pdf:hover {
-            background: #FFE4E6;
+            background: var(--terracotta-100);
         }
 
         .user-chip {
@@ -625,21 +606,14 @@
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #0F172A, #059669);
-            color: #FFFFFF;
+            background: linear-gradient(135deg, #2C2621, #A67C52);
+            color: #FAF7F2;
             font-weight: 800;
             font-size: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             flex-shrink: 0;
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .user-meta {
@@ -663,7 +637,7 @@
             height: 38px;
             padding: 0 12px;
             border-radius: 10px;
-            background: var(--bg-subtle);
+            background: var(--bg-surface);
             color: var(--text-secondary);
             border: 1px solid var(--border-color);
             font-size: 12.5px;
@@ -671,9 +645,9 @@
         }
 
         .btn-logout:hover {
-            background: var(--coral-50);
-            color: var(--coral-600);
-            border-color: #FECDD3;
+            background: var(--terracotta-50);
+            color: var(--terracotta-600);
+            border-color: var(--terracotta-100);
         }
 
         /* Main Container */
@@ -688,7 +662,7 @@
         }
 
         /* ==========================================================================
-           4. 4 EQUAL-HEIGHT KPI CARDS
+           4. 4 EQUAL-HEIGHT KPI CARDS (BEIGE / BRONZE / OLIVE / TERRACOTTA)
            ========================================================================== */
         .kpi-grid {
             display: grid;
@@ -712,6 +686,7 @@
         .kpi-card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-hover);
+            border-color: var(--border-strong);
         }
 
         .kpi-top {
@@ -739,10 +714,10 @@
             flex-shrink: 0;
         }
 
-        .kpi-icon.slate { background: #F1F5F9; color: #0F172A; }
-        .kpi-icon.emerald { background: var(--emerald-50); color: var(--emerald-600); }
-        .kpi-icon.coral { background: var(--coral-50); color: var(--coral-600); }
-        .kpi-icon.indigo { background: var(--indigo-50); color: var(--indigo-600); }
+        .kpi-icon.bronze { background: var(--bronze-50); color: var(--bronze-700); }
+        .kpi-icon.olive { background: var(--olive-50); color: var(--olive-600); }
+        .kpi-icon.terracotta { background: var(--terracotta-50); color: var(--terracotta-600); }
+        .kpi-icon.amber { background: var(--amber-50); color: var(--amber-600); }
 
         .kpi-value {
             font-size: 24px;
@@ -754,8 +729,8 @@
             text-align: right;
         }
 
-        .kpi-value.emerald-text { color: var(--emerald-600); }
-        .kpi-value.coral-text { color: var(--coral-600); }
+        .kpi-value.olive-text { color: var(--olive-600); }
+        .kpi-value.terracotta-text { color: var(--terracotta-600); }
 
         .kpi-footer {
             display: flex;
@@ -778,19 +753,19 @@
         }
 
         .status-badge.surplus {
-            background: var(--emerald-50);
-            color: var(--emerald-700);
+            background: var(--olive-50);
+            color: var(--olive-600);
         }
 
         .status-badge.deficit {
-            background: var(--coral-50);
-            color: var(--coral-600);
+            background: var(--terracotta-50);
+            color: var(--terracotta-600);
         }
 
         .progress-track {
             width: 100%;
             height: 8px;
-            background: #E2E8F0;
+            background: var(--bg-sand);
             border-radius: 99px;
             overflow: hidden;
             margin-top: 4px;
@@ -798,7 +773,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4F46E5, #10B981);
+            background: linear-gradient(90deg, #A67C52, #4A6B53);
             border-radius: 99px;
             transition: width 0.4s ease;
         }
@@ -839,7 +814,7 @@
         }
 
         .card-header h3 i {
-            color: var(--emerald-600);
+            color: var(--bronze-600);
         }
 
         .card-subtitle {
@@ -848,7 +823,6 @@
             font-weight: 600;
         }
 
-        /* Fixed height container prevents Chart.js infinite resize bug */
         .chart-canvas-container {
             position: relative;
             width: 100%;
@@ -927,7 +901,6 @@
             align-items: center;
         }
 
-        /* Custom RTL Select Dropdowns — Zero Arrow Overlap */
         .select-control {
             width: 100%;
             height: 44px;
@@ -942,7 +915,7 @@
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236E655C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: left 12px center;
             transition: var(--transition);
@@ -950,7 +923,7 @@
 
         .select-control:focus {
             background-color: var(--bg-surface);
-            border-color: var(--emerald-600);
+            border-color: var(--bronze-600);
         }
 
         .btn-reset-filter {
@@ -965,7 +938,7 @@
         }
 
         .btn-reset-filter:hover {
-            background: #E2E8F0;
+            background: var(--bg-sand);
             color: var(--text-primary);
         }
 
@@ -993,7 +966,7 @@
         }
 
         .tx-table thead {
-            background: var(--bg-subtle);
+            background: var(--bg-sand);
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -1008,7 +981,7 @@
         .tx-table td {
             padding: 15px 18px;
             font-size: 14px;
-            border-bottom: 1px solid #F1F5F9;
+            border-bottom: 1px solid #F3EDE2;
             vertical-align: middle;
         }
 
@@ -1017,7 +990,7 @@
         }
 
         .tx-table tbody tr:hover {
-            background: #F8FAFC;
+            background: #FAF7F2;
         }
 
         .tx-date {
@@ -1054,13 +1027,13 @@
         }
 
         .type-pill.income {
-            background: var(--emerald-50);
-            color: var(--emerald-700);
+            background: var(--olive-50);
+            color: var(--olive-600);
         }
 
         .type-pill.expense {
-            background: var(--coral-50);
-            color: var(--coral-600);
+            background: var(--terracotta-50);
+            color: var(--terracotta-600);
         }
 
         .tx-amount {
@@ -1071,8 +1044,8 @@
             text-align: right;
         }
 
-        .tx-amount.income { color: var(--emerald-600); }
-        .tx-amount.expense { color: var(--coral-600); }
+        .tx-amount.income { color: var(--olive-600); }
+        .tx-amount.expense { color: var(--terracotta-600); }
 
         .row-actions {
             display: inline-flex;
@@ -1092,23 +1065,22 @@
         }
 
         .icon-action-btn.edit {
-            background: #F1F5F9;
-            color: #334155;
+            background: var(--bg-sand);
+            color: var(--text-primary);
         }
 
         .icon-action-btn.edit:hover {
-            background: #E0E7FF;
-            color: #4338CA;
+            background: var(--bronze-100);
+            color: var(--bronze-700);
         }
 
         .icon-action-btn.delete {
-            background: #FFF1F2;
-            color: #E11D48;
+            background: var(--terracotta-50);
+            color: var(--terracotta-600);
         }
 
         .icon-action-btn.delete:hover {
-            background: #FFE4E6;
-            color: #BE123C;
+            background: var(--terracotta-100);
         }
 
         .empty-state {
@@ -1120,8 +1092,8 @@
             width: 64px;
             height: 64px;
             border-radius: 20px;
-            background: var(--bg-main);
-            color: var(--text-muted);
+            background: var(--bg-sand);
+            color: var(--bronze-600);
             font-size: 26px;
             display: inline-flex;
             align-items: center;
@@ -1149,7 +1121,7 @@
             position: fixed;
             inset: 0;
             z-index: 60;
-            background: rgba(15, 23, 42, 0.55);
+            background: rgba(44, 38, 33, 0.52);
             backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
@@ -1175,6 +1147,7 @@
 
         .modal-header {
             padding: 18px 22px;
+            background: var(--bg-main);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
@@ -1191,7 +1164,7 @@
             width: 34px;
             height: 34px;
             border-radius: 10px;
-            background: var(--bg-main);
+            background: var(--bg-sand);
             color: var(--text-secondary);
             display: flex;
             align-items: center;
@@ -1199,8 +1172,8 @@
         }
 
         .modal-close:hover {
-            background: var(--coral-50);
-            color: var(--coral-600);
+            background: var(--terracotta-50);
+            color: var(--terracotta-600);
         }
 
         .modal-body {
@@ -1211,7 +1184,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            background: var(--bg-main);
+            background: var(--bg-sand);
             padding: 5px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
@@ -1232,15 +1205,15 @@
         }
 
         .type-switch-btn.active-expense {
-            background: var(--coral-600);
+            background: var(--terracotta-600);
             color: #FFFFFF;
-            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
+            box-shadow: 0 4px 12px rgba(184, 80, 66, 0.25);
         }
 
         .type-switch-btn.active-income {
-            background: var(--emerald-600);
+            background: var(--olive-600);
             color: #FFFFFF;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+            box-shadow: 0 4px 12px rgba(74, 107, 83, 0.25);
         }
 
         .modal-two-cols {
@@ -1251,7 +1224,7 @@
 
         .modal-footer {
             padding: 16px 22px;
-            background: var(--bg-subtle);
+            background: var(--bg-main);
             border-top: 1px solid var(--border-color);
             display: flex;
             align-items: center;
@@ -1266,7 +1239,7 @@
         }
 
         .btn-secondary:hover {
-            background: #F1F5F9;
+            background: var(--bg-sand);
             color: var(--text-primary);
         }
 
@@ -1285,11 +1258,12 @@
         }
 
         .toast-item {
-            background: #0F172A;
-            color: #FFFFFF;
+            background: var(--espresso-900);
+            color: #FAF7F2;
             padding: 13px 16px;
             border-radius: 12px;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.22);
+            border: 1px solid #4A4038;
+            box-shadow: 0 12px 30px rgba(44, 38, 33, 0.25);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -1298,9 +1272,9 @@
             animation: slideToast 0.25s ease-out;
         }
 
-        .toast-item.success i { color: #34D399; }
-        .toast-item.error i { color: #FB7185; }
-        .toast-item.info i { color: #60A5FA; }
+        .toast-item.success i { color: #8FB996; }
+        .toast-item.error i { color: #E58C80; }
+        .toast-item.info i { color: #D4A872; }
 
         @keyframes slideToast {
             from { opacity: 0; transform: translateY(12px); }
@@ -1308,7 +1282,7 @@
         }
 
         /* ==========================================================================
-           10. RESPONSIVE MEDIA QUERIES (Tablet & Mobile)
+           10. RESPONSIVE MEDIA QUERIES
            ========================================================================== */
         @media (max-width: 1024px) {
             .kpi-grid {
@@ -1364,7 +1338,7 @@
 <body>
 
     <!-- ========================================================================
-         VIEW 1: SPLIT-SCREEN AUTHENTICATION (FIREBASE v10)
+         VIEW 1: SPLIT-SCREEN BEIGE & ESPRESSO AUTHENTICATION
          ======================================================================== -->
     <section id="auth-view" class="auth-wrapper">
         <div class="auth-container">
@@ -1385,18 +1359,18 @@
                         <div class="showcase-stats-card">
                             <div class="showcase-stats-header">
                                 <span>معدل الادخار الشهري الذكي</span>
-                                <i class="fa-solid fa-arrow-trend-up" style="color: #34D399;"></i>
+                                <i class="fa-solid fa-arrow-trend-up" style="color: #E3C193;"></i>
                             </div>
                             <div class="showcase-stats-value">
                                 <span>+34.8%</span>
-                                <span class="showcase-pill">نمو مستقر</span>
+                                <span class="showcase-pill">توازن مستقر</span>
                             </div>
                         </div>
 
                         <ul class="feature-list">
                             <li><i class="fa-solid fa-circle-check"></i><span>رسوم بيانية تفاعلية لتحليل الدخل والمصروفات حسب الفئات</span></li>
                             <li><i class="fa-solid fa-circle-check"></i><span>تصدير تقارير مالية عربية احترافية بصيغتي Excel و PDF</span></li>
-                            <li><i class="fa-solid fa-circle-check"></i><span>حماية ومزامنة فورية لحسابك عبر Firebase Authentication</span></li>
+                            <li><i class="fa-solid fa-circle-check"></i><span>يعمل فوراً وبخصوصية تامة على جهازك دون أي اشتراكات</span></li>
                         </ul>
                     </div>
                 </div>
@@ -1418,7 +1392,7 @@
                     <p id="auth-subheading">سجّل دخولك للوصول إلى لوحة التحكم وتقاريرك المالية</p>
                 </div>
 
-                <!-- Dedicated Error Alert Box -->
+                <!-- Error Alert Box -->
                 <div id="auth-error-box" class="auth-alert hidden" role="alert">
                     <i class="fa-solid fa-circle-exclamation"></i>
                     <span id="auth-error-text"></span>
@@ -1448,7 +1422,7 @@
                         <label class="form-label" for="auth-password">كلمة المرور</label>
                         <div class="input-icon-wrap">
                             <i class="fa-solid fa-lock field-icon"></i>
-                            <input type="password" id="auth-password" class="form-control has-left-btn" placeholder="••••••••" minlength="6" required>
+                            <input type="password" id="auth-password" class="form-control has-left-btn" placeholder="••••••••" minlength="4" required>
                             <button type="button" class="toggle-pass-btn" onclick="UI.togglePasswordVisibility()" title="إظهار / إخفاء كلمة المرور">
                                 <i id="pass-eye-icon" class="fa-regular fa-eye"></i>
                             </button>
@@ -1469,31 +1443,19 @@
                 </form>
 
                 <div class="auth-divider">
-                    <span>أو المتابعة السريعة عبر</span>
+                    <span>أو الدخول السريع للمعاينة</span>
                 </div>
 
-                <div class="social-stack">
-                    <button type="button" class="btn btn-google btn-full" onclick="AuthService.loginWithGoogle()">
-                        <svg width="18" height="18" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/>
-                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24Z"/>
-                            <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/>
-                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/>
-                        </svg>
-                        <span>المتابعة باستخدام حساب Google</span>
-                    </button>
-
-                    <button type="button" class="btn btn-demo btn-full" onclick="AuthService.loginDemo()">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>معاينة سريعة (وضع التجربة)</span>
-                    </button>
-                </div>
+                <button type="button" class="btn btn-demo btn-full" onclick="AuthService.loginDemo()">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--bronze-700);"></i>
+                    <span>دخول تجريبي فوري (بيانات جاهزة)</span>
+                </button>
             </div>
         </div>
     </section>
 
     <!-- ========================================================================
-         VIEW 2: MAIN DASHBOARD
+         VIEW 2: MAIN DASHBOARD (WARM BEIGE THEME)
          ======================================================================== -->
     <section id="dashboard-view" class="dashboard-wrapper hidden">
         <!-- Sticky Top Navbar -->
@@ -1543,7 +1505,7 @@
                 <article class="kpi-card">
                     <div class="kpi-top">
                         <span class="kpi-title">صافي الرصيد الحالي</span>
-                        <div class="kpi-icon slate">
+                        <div class="kpi-icon bronze">
                             <i class="fa-solid fa-wallet"></i>
                         </div>
                     </div>
@@ -1558,14 +1520,14 @@
                 <article class="kpi-card">
                     <div class="kpi-top">
                         <span class="kpi-title">إجمالي الدخل</span>
-                        <div class="kpi-icon emerald">
+                        <div class="kpi-icon olive">
                             <i class="fa-solid fa-arrow-trend-up"></i>
                         </div>
                     </div>
-                    <div id="kpi-income" class="kpi-value emerald-text">0.00 ر.س</div>
+                    <div id="kpi-income" class="kpi-value olive-text">0.00 ر.س</div>
                     <div class="kpi-footer">
-                        <span id="kpi-income-count">0 عمليات دخل مسجلة</span>
-                        <i class="fa-solid fa-circle-plus" style="color: var(--emerald-600);"></i>
+                        <span id="kpi-income-count">0 عمليات دخل</span>
+                        <i class="fa-solid fa-circle-plus" style="color: var(--olive-600);"></i>
                     </div>
                 </article>
 
@@ -1573,14 +1535,14 @@
                 <article class="kpi-card">
                     <div class="kpi-top">
                         <span class="kpi-title">إجمالي المصروفات</span>
-                        <div class="kpi-icon coral">
+                        <div class="kpi-icon terracotta">
                             <i class="fa-solid fa-arrow-trend-down"></i>
                         </div>
                     </div>
-                    <div id="kpi-expense" class="kpi-value coral-text">0.00 ر.س</div>
+                    <div id="kpi-expense" class="kpi-value terracotta-text">0.00 ر.س</div>
                     <div class="kpi-footer">
-                        <span id="kpi-expense-count">0 عمليات مصروف مسجلة</span>
-                        <i class="fa-solid fa-circle-minus" style="color: var(--coral-600);"></i>
+                        <span id="kpi-expense-count">0 عمليات مصروف</span>
+                        <i class="fa-solid fa-circle-minus" style="color: var(--terracotta-600);"></i>
                     </div>
                 </article>
 
@@ -1588,7 +1550,7 @@
                 <article class="kpi-card">
                     <div class="kpi-top">
                         <span class="kpi-title">نسبة الادخار</span>
-                        <div class="kpi-icon indigo">
+                        <div class="kpi-icon amber">
                             <i class="fa-solid fa-piggy-bank"></i>
                         </div>
                     </div>
@@ -1628,7 +1590,7 @@
             <section class="toolbar-card">
                 <div class="toolbar-top">
                     <div class="toolbar-title">
-                        <i class="fa-solid fa-list-check" style="color: var(--emerald-600);"></i>
+                        <i class="fa-solid fa-list-check" style="color: var(--bronze-600);"></i>
                         <span>سجل المعاملات المالية</span>
                     </div>
 
@@ -1782,186 +1744,148 @@
     <div id="toast-container" class="toast-container"></div>
 
     <!-- ========================================================================
-         JAVASCRIPT LOGIC (FIREBASE v10.12.2 MODULAR SDK + CHARTS + EXPORTS)
+         100% SELF-CONTAINED CLIENT-SIDE JAVASCRIPT (ZERO EXTERNAL APIS)
          ======================================================================== -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import {
-            getAuth,
-            signInWithEmailAndPassword,
-            createUserWithEmailAndPassword,
-            updateProfile,
-            signInWithPopup,
-            GoogleAuthProvider,
-            signOut,
-            onAuthStateChanged,
-            setPersistence,
-            browserLocalPersistence,
-            browserSessionPersistence
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        // Firebase Configuration (Project: my-site-ebdc9)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDr52CHQIBq05XCq_YoOhhp8akTwqngPPk",
-            authDomain: "my-site-ebdc9.firebaseapp.com",
-            projectId: "my-site-ebdc9",
-            storageBucket: "my-site-ebdc9.firebasestorage.app",
-            messagingSenderId: "391429914437",
-            appId: "1:391429914437:web:d6671a39e774e94890c82c"
-        };
-
-        const firebaseApp = initializeApp(firebaseConfig);
-        const auth = getAuth(firebaseApp);
-        auth.languageCode = 'ar';
-        const googleProvider = new GoogleAuthProvider();
-
+    <script>
         /* ======================================================================
-           1. AUTHENTICATION SERVICE (Firebase v10 + Demo Mode)
+           1. LOCAL AUTHENTICATION SERVICE (LocalStorage Accounts + Session)
            ====================================================================== */
         const AuthService = {
-            DEMO_KEY: 'mizan_demo_session_v3',
+            USERS_KEY: 'mizan_local_users_v1',
+            SESSION_KEY: 'mizan_local_session_v1',
             currentUser: null,
 
+            getUsers() {
+                try {
+                    return JSON.parse(localStorage.getItem(this.USERS_KEY)) || [];
+                } catch (e) {
+                    return [];
+                }
+            },
+
+            saveUsers(users) {
+                localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+            },
+
             init() {
-                const demoRaw = sessionStorage.getItem(this.DEMO_KEY);
-                if (demoRaw) {
+                const rawSession = localStorage.getItem(this.SESSION_KEY) || sessionStorage.getItem(this.SESSION_KEY);
+                if (rawSession) {
                     try {
-                        this.currentUser = JSON.parse(demoRaw);
+                        this.currentUser = JSON.parse(rawSession);
                         UI.showDashboard();
+                        return;
                     } catch (e) {
-                        sessionStorage.removeItem(this.DEMO_KEY);
+                        localStorage.removeItem(this.SESSION_KEY);
+                        sessionStorage.removeItem(this.SESSION_KEY);
                     }
                 }
-
-                onAuthStateChanged(auth, (fbUser) => {
-                    if (fbUser) {
-                        sessionStorage.removeItem(this.DEMO_KEY);
-                        this.currentUser = {
-                            uid: fbUser.uid,
-                            name: fbUser.displayName || fbUser.email.split('@')[0],
-                            email: fbUser.email,
-                            photoURL: fbUser.photoURL || null,
-                            isDemo: false
-                        };
-                        UI.showDashboard();
-                    } else if (!sessionStorage.getItem(this.DEMO_KEY)) {
-                        this.currentUser = null;
-                        UI.showAuth();
-                    }
-                });
+                UI.showAuth();
             },
 
-            translateError(error) {
-                const code = error?.code || '';
-                switch (code) {
-                    case 'auth/invalid-credential':
-                    case 'auth/user-not-found':
-                    case 'auth/wrong-password':
-                        return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-                    case 'auth/email-already-in-use':
-                        return 'هذا البريد الإلكتروني مسجل مسبقاً، يرجى تسجيل الدخول.';
-                    case 'auth/weak-password':
-                        return 'كلمة المرور ضعيفة، يجب أن تتكون من 6 أحرف على الأقل.';
-                    case 'auth/invalid-email':
-                        return 'يرجى إدخال بريد إلكتروني صحيح.';
-                    case 'auth/too-many-requests':
-                        return 'تم إيقاف المحاولات مؤقتاً لكثرة المحاولات الخاطئة. حاول بعد قليل.';
-                    case 'auth/popup-closed-by-user':
-                        return 'تم إغلاق نافذة تسجيل الدخول بحساب Google قبل إتمام العملية.';
-                    case 'auth/unauthorized-domain':
-                        return 'هذا النطاق غير مضاف في Authorized Domains بلوحة Firebase. استخدم "معاينة سريعة" أو أضف النطاق.';
-                    case 'auth/network-request-failed':
-                        return 'تعذر الاتصال بالشبكة، يرجى التحقق من اتصال الإنترنت.';
-                    default:
-                        return error?.message || 'حدث خطأ أثناء المصادقة، يرجى المحاولة مرة أخرى.';
+            setSession(user, remember = true) {
+                this.currentUser = user;
+                const payload = JSON.stringify(user);
+                if (remember) {
+                    localStorage.setItem(this.SESSION_KEY, payload);
+                    sessionStorage.removeItem(this.SESSION_KEY);
+                } else {
+                    sessionStorage.setItem(this.SESSION_KEY, payload);
+                    localStorage.removeItem(this.SESSION_KEY);
                 }
             },
 
-            async login(email, password, remember = true) {
+            login(email, password, remember = true) {
                 UI.clearAuthError();
-                const btn = document.getElementById('auth-submit-btn');
-                try {
-                    btn.disabled = true;
-                    await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
-                    await signInWithEmailAndPassword(auth, email, password);
-                    UI.showToast('تم تسجيل الدخول بنجاح!', 'success');
-                } catch (err) {
-                    UI.showAuthError(this.translateError(err));
-                } finally {
-                    btn.disabled = false;
+                const normalizedEmail = email.trim().toLowerCase();
+                const users = this.getUsers();
+                const found = users.find(u => u.email.toLowerCase() === normalizedEmail);
+
+                if (!found) {
+                    UI.showAuthError('لا يوجد حساب مسجل بهذا البريد الإلكتروني. يمكنك إنشاء حساب جديد أو استخدام الدخول التجريبي.');
+                    return;
                 }
+
+                if (found.password !== password) {
+                    UI.showAuthError('كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى.');
+                    return;
+                }
+
+                const sessionUser = {
+                    uid: found.uid,
+                    name: found.name,
+                    email: found.email
+                };
+                this.setSession(sessionUser, remember);
+                UI.showToast(`مرحباً بعودتك يا ${found.name}!`, 'success');
+                UI.showDashboard();
             },
 
-            async register(name, email, password) {
+            register(name, email, password) {
                 UI.clearAuthError();
-                const btn = document.getElementById('auth-submit-btn');
-                try {
-                    if (!name) throw { message: 'يرجى إدخال الاسم الكامل.' };
-                    btn.disabled = true;
-                    const cred = await createUserWithEmailAndPassword(auth, email, password);
-                    await updateProfile(cred.user, { displayName: name });
-                    this.currentUser = {
-                        uid: cred.user.uid,
-                        name: name,
-                        email: email,
-                        photoURL: null,
-                        isDemo: false
-                    };
-                    UI.showToast(`مرحباً بك يا ${name}! تم إنشاء حسابك بنجاح.`, 'success');
-                    UI.showDashboard();
-                } catch (err) {
-                    UI.showAuthError(this.translateError(err));
-                } finally {
-                    btn.disabled = false;
-                }
-            },
+                const cleanName = name.trim();
+                const normalizedEmail = email.trim().toLowerCase();
 
-            async loginWithGoogle() {
-                UI.clearAuthError();
-                try {
-                    await signInWithPopup(auth, googleProvider);
-                    UI.showToast('تم تسجيل الدخول بحساب Google بنجاح!', 'success');
-                } catch (err) {
-                    UI.showAuthError(this.translateError(err));
+                if (!cleanName) {
+                    UI.showAuthError('يرجى إدخال الاسم الكامل.');
+                    return;
                 }
+                if (password.length < 4) {
+                    UI.showAuthError('كلمة المرور يجب أن تتكون من 4 أحرف على الأقل.');
+                    return;
+                }
+
+                const users = this.getUsers();
+                if (users.some(u => u.email.toLowerCase() === normalizedEmail)) {
+                    UI.showAuthError('هذا البريد الإلكتروني مسجل مسبقاً، يرجى تسجيل الدخول.');
+                    return;
+                }
+
+                const newUser = {
+                    uid: 'user_' + Date.now(),
+                    name: cleanName,
+                    email: normalizedEmail,
+                    password: password
+                };
+                users.push(newUser);
+                this.saveUsers(users);
+
+                this.setSession({
+                    uid: newUser.uid,
+                    name: newUser.name,
+                    email: newUser.email
+                }, true);
+
+                UI.showToast(`تم إنشاء حسابك بنجاح! أهلاً بك يا ${cleanName}`, 'success');
+                UI.showDashboard();
             },
 
             loginDemo() {
                 UI.clearAuthError();
                 const demoUser = {
-                    uid: 'demo_user_mizan',
+                    uid: 'demo_mizan_beige',
                     name: 'أحمد المنصور (وضع التجربة)',
-                    email: 'demo@mizan-finance.com',
-                    photoURL: null,
-                    isDemo: true
+                    email: 'demo@mizan-finance.com'
                 };
-                this.currentUser = demoUser;
-                sessionStorage.setItem(this.DEMO_KEY, JSON.stringify(demoUser));
-                UI.showToast('تم الدخول إلى وضع التجربة بنجاح', 'success');
+                this.setSession(demoUser, false);
+                UI.showToast('تم الدخول إلى الحساب التجريبي بنجاح', 'success');
                 UI.showDashboard();
             },
 
-            async logout() {
-                try {
-                    sessionStorage.removeItem(this.DEMO_KEY);
-                    if (auth.currentUser) {
-                        await signOut(auth);
-                    }
-                    this.currentUser = null;
-                    UI.showToast('تم تسجيل الخروج بنجاح', 'info');
-                    UI.showAuth();
-                } catch (err) {
-                    UI.showToast('حدث خطأ أثناء تسجيل الخروج', 'error');
-                }
+            logout() {
+                localStorage.removeItem(this.SESSION_KEY);
+                sessionStorage.removeItem(this.SESSION_KEY);
+                this.currentUser = null;
+                UI.showToast('تم تسجيل الخروج بنجاح', 'info');
+                UI.showAuth();
             }
         };
 
         /* ======================================================================
-           2. APPLICATION DATA & STATE MANAGEMENT
+           2. APPLICATION DATA & WARM BEIGE CHART PALETTE
            ====================================================================== */
         const App = {
-            STORAGE_PREFIX: 'mizan_tx_v3',
-            CURRENCY_KEY: 'mizan_currency_v3',
+            STORAGE_PREFIX: 'mizan_beige_tx_v1',
+            CURRENCY_KEY: 'mizan_beige_currency_v1',
             currency: 'SAR',
             transactions: [],
             filteredTransactions: [],
@@ -1977,20 +1901,20 @@
 
             categories: {
                 expense: [
-                    { id: 'food', label: 'طعام ومطاعم', icon: 'fa-utensils', color: '#E11D48', bg: '#FFF1F2' },
-                    { id: 'housing', label: 'سكن وفواتير', icon: 'fa-house', color: '#2563EB', bg: '#EFF6FF' },
-                    { id: 'transport', label: 'مواصلات ووقود', icon: 'fa-car', color: '#D97706', bg: '#FFFBEB' },
-                    { id: 'shopping', label: 'تسوق وملابس', icon: 'fa-bag-shopping', color: '#7C3AED', bg: '#F5F3FF' },
-                    { id: 'health', label: 'صحة وعلاج', icon: 'fa-heart-pulse', color: '#0891B2', bg: '#ECFEFF' },
-                    { id: 'education', label: 'تعليم وتطوير', icon: 'fa-graduation-cap', color: '#4F46E5', bg: '#EEF2FF' },
-                    { id: 'other_exp', label: 'مصروفات أخرى', icon: 'fa-receipt', color: '#475569', bg: '#F1F5F9' }
+                    { id: 'food', label: 'طعام ومطاعم', icon: 'fa-utensils', color: '#B85042', bg: '#FBF1EF' },
+                    { id: 'housing', label: 'سكن وفواتير', icon: 'fa-house', color: '#8C6239', bg: '#F8F3EC' },
+                    { id: 'transport', label: 'مواصلات ووقود', icon: 'fa-car', color: '#B47B38', bg: '#FCF6EC' },
+                    { id: 'shopping', label: 'تسوق وملابس', icon: 'fa-bag-shopping', color: '#7D5A50', bg: '#F5EFEA' },
+                    { id: 'health', label: 'صحة وعلاج', icon: 'fa-heart-pulse', color: '#4A6B53', bg: '#EFF5F0' },
+                    { id: 'education', label: 'تعليم وتطوير', icon: 'fa-graduation-cap', color: '#5C6B73', bg: '#F0F3F5' },
+                    { id: 'other_exp', label: 'مصروفات أخرى', icon: 'fa-receipt', color: '#6E655C', bg: '#F3EDE2' }
                 ],
                 income: [
-                    { id: 'salary', label: 'الراتب الشهري', icon: 'fa-briefcase', color: '#059669', bg: '#ECFDF5' },
-                    { id: 'freelance', label: 'عمل حر ومشاريع', icon: 'fa-laptop-code', color: '#0D9488', bg: '#F0FDFA' },
-                    { id: 'investment', label: 'استثمارات وأرباح', icon: 'fa-chart-line', color: '#16A34A', bg: '#F0FDF4' },
-                    { id: 'bonus', label: 'مكافآت وحوافز', icon: 'fa-gift', color: '#0284C7', bg: '#F0F9FF' },
-                    { id: 'other_inc', label: 'دخل إضافي', icon: 'fa-coins', color: '#65A30D', bg: '#F7FEE7' }
+                    { id: 'salary', label: 'الراتب الشهري', icon: 'fa-briefcase', color: '#4A6B53', bg: '#EFF5F0' },
+                    { id: 'freelance', label: 'عمل حر ومشاريع', icon: 'fa-laptop-code', color: '#8C6239', bg: '#F8F3EC' },
+                    { id: 'investment', label: 'استثمارات وأرباح', icon: 'fa-chart-line', color: '#5B7553', bg: '#F1F6EF' },
+                    { id: 'bonus', label: 'مكافآت وحوافز', icon: 'fa-gift', color: '#B47B38', bg: '#FCF6EC' },
+                    { id: 'other_inc', label: 'دخل إضافي', icon: 'fa-coins', color: '#6E655C', bg: '#F3EDE2' }
                 ]
             },
 
@@ -2005,8 +1929,8 @@
                     id: catId,
                     label: 'عام',
                     icon: 'fa-tag',
-                    color: '#475569',
-                    bg: '#F1F5F9'
+                    color: '#6E655C',
+                    bg: '#F3EDE2'
                 };
             },
 
@@ -2090,7 +2014,6 @@
                     catSelect.value = currentCat;
                 }
 
-                // Populate unique months
                 const monthSelect = document.getElementById('filter-month');
                 const currentMonth = monthSelect.value;
                 monthSelect.innerHTML = '<option value="all">جميع الأشهر</option>';
@@ -2270,7 +2193,7 @@
 
             renderCharts() {
                 Chart.defaults.font.family = "'Cairo', 'Tajawal', sans-serif";
-                Chart.defaults.color = '#475569';
+                Chart.defaults.color = '#6E655C';
 
                 // 1. Monthly Bar Chart
                 const monthMap = {};
@@ -2304,7 +2227,7 @@
                             {
                                 label: 'الدخل',
                                 data: incomeData.length ? incomeData : [0],
-                                backgroundColor: '#10B981',
+                                backgroundColor: '#4A6B53',
                                 borderRadius: 8,
                                 barPercentage: 0.55,
                                 categoryPercentage: 0.65
@@ -2312,7 +2235,7 @@
                             {
                                 label: 'المصروفات',
                                 data: expenseData.length ? expenseData : [0],
-                                backgroundColor: '#F43F5E',
+                                backgroundColor: '#B85042',
                                 borderRadius: 8,
                                 barPercentage: 0.55,
                                 categoryPercentage: 0.65
@@ -2337,14 +2260,14 @@
                             x: { grid: { display: false } },
                             y: {
                                 beginAtZero: true,
-                                grid: { color: '#F1F5F9' },
+                                grid: { color: '#F3EDE2' },
                                 border: { display: false }
                             }
                         }
                     }
                 });
 
-                // 2. Category Doughnut Chart (Expenses breakdown)
+                // 2. Category Doughnut Chart (Warm Beige & Earthy Tones)
                 const catTotals = {};
                 this.filteredTransactions
                     .filter(t => t.type === 'expense')
@@ -2368,7 +2291,7 @@
                         labels: catLabels.length ? catLabels : ['لا توجد مصروفات'],
                         datasets: [{
                             data: catValues.length ? catValues : [1],
-                            backgroundColor: catColors.length ? catColors : ['#E2E8F0'],
+                            backgroundColor: catColors.length ? catColors : ['#E5DDD0'],
                             borderWidth: 2,
                             borderColor: '#FFFFFF',
                             hoverOffset: 6
@@ -2405,7 +2328,7 @@
         };
 
         /* ======================================================================
-           3. EXPORT SERVICE (EXCEL RTL + CLEAN ARABIC A4 PDF)
+           3. EXPORT SERVICE (EXCEL RTL + WARM BEIGE ARABIC A4 PDF)
            ====================================================================== */
         const ExportService = {
             exportExcel() {
@@ -2432,7 +2355,6 @@
                     };
                 });
 
-                // Summary Rows
                 rows.push({});
                 rows.push({ 'التاريخ': 'إجمالي الدخل', 'المبلغ': totalIncome, 'العملة': App.currencies[App.currency].symbol });
                 rows.push({ 'التاريخ': 'إجمالي المصروفات', 'المبلغ': totalExpense, 'العملة': App.currencies[App.currency].symbol });
@@ -2479,15 +2401,15 @@
                 const tableRowsHtml = App.filteredTransactions.map(tx => {
                     const cat = App.getCategoryMeta(tx.type, tx.category).label;
                     const typeText = tx.type === 'income' ? 'دخل' : 'مصروف';
-                    const color = tx.type === 'income' ? '#059669' : '#E11D48';
+                    const color = tx.type === 'income' ? '#4A6B53' : '#B85042';
                     const sign = tx.type === 'income' ? '+' : '-';
                     return `
                         <tr>
-                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0;">${tx.date}</td>
-                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0; font-weight: 700;">${App.escapeHtml(tx.description)}</td>
-                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0;">${cat}</td>
-                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0;">${typeText}</td>
-                            <td style="padding: 9px 10px; border-bottom: 1px solid #E2E8F0; color: ${color}; font-weight: 700; direction: ltr; text-align: right;">${sign} ${App.formatMoney(tx.amount)}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E5DDD0;">${tx.date}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E5DDD0; font-weight: 700;">${App.escapeHtml(tx.description)}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E5DDD0;">${cat}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E5DDD0;">${typeText}</td>
+                            <td style="padding: 9px 10px; border-bottom: 1px solid #E5DDD0; color: ${color}; font-weight: 700; direction: ltr; text-align: right;">${sign} ${App.formatMoney(tx.amount)}</td>
                         </tr>
                     `;
                 }).join('');
@@ -2498,42 +2420,42 @@
                     font-family: 'Cairo', 'Tajawal', sans-serif;
                     direction: rtl;
                     text-align: right;
-                    color: #0F172A;
+                    color: #2C2621;
                     background: #FFFFFF;
                     padding: 28px;
                     width: 100%;
                 `;
 
                 reportElement.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #059669; padding-bottom: 16px; margin-bottom: 22px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #A67C52; padding-bottom: 16px; margin-bottom: 22px;">
                         <div>
-                            <h1 style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0 0 4px;">مِيزان | التقرير المالي التفصيلي</h1>
-                            <p style="font-size: 13px; color: #475569; margin: 0;">إعداد: ${App.escapeHtml(userName)}</p>
+                            <h1 style="font-size: 22px; font-weight: 800; color: #2C2621; margin: 0 0 4px;">مِيزان | التقرير المالي التفصيلي</h1>
+                            <p style="font-size: 13px; color: #6E655C; margin: 0;">إعداد: ${App.escapeHtml(userName)}</p>
                         </div>
-                        <div style="text-align: left; font-size: 12.5px; color: #475569;">
+                        <div style="text-align: left; font-size: 12.5px; color: #6E655C;">
                             <div>تاريخ الإصدار: ${today}</div>
                             <div>عدد المعاملات: ${App.filteredTransactions.length}</div>
                         </div>
                     </div>
 
                     <div style="display: flex; gap: 12px; margin-bottom: 24px;">
-                        <div style="flex: 1; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px;">
-                            <div style="font-size: 12px; color: #475569; margin-bottom: 4px;">صافي الرصيد</div>
-                            <div style="font-size: 17px; font-weight: 800; color: #0F172A; direction: ltr; text-align: right;">${App.formatMoney(balance)}</div>
+                        <div style="flex: 1; background: #FAF7F2; border: 1px solid #E5DDD0; border-radius: 10px; padding: 14px;">
+                            <div style="font-size: 12px; color: #6E655C; margin-bottom: 4px;">صافي الرصيد</div>
+                            <div style="font-size: 17px; font-weight: 800; color: #2C2621; direction: ltr; text-align: right;">${App.formatMoney(balance)}</div>
                         </div>
-                        <div style="flex: 1; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 14px;">
-                            <div style="font-size: 12px; color: #047857; margin-bottom: 4px;">إجمالي الدخل</div>
-                            <div style="font-size: 17px; font-weight: 800; color: #059669; direction: ltr; text-align: right;">${App.formatMoney(income)}</div>
+                        <div style="flex: 1; background: #EFF5F0; border: 1px solid #DCE9DF; border-radius: 10px; padding: 14px;">
+                            <div style="font-size: 12px; color: #4A6B53; margin-bottom: 4px;">إجمالي الدخل</div>
+                            <div style="font-size: 17px; font-weight: 800; color: #4A6B53; direction: ltr; text-align: right;">${App.formatMoney(income)}</div>
                         </div>
-                        <div style="flex: 1; background: #FFF1F2; border: 1px solid #FECDD3; border-radius: 10px; padding: 14px;">
-                            <div style="font-size: 12px; color: #BE123C; margin-bottom: 4px;">إجمالي المصروفات</div>
-                            <div style="font-size: 17px; font-weight: 800; color: #E11D48; direction: ltr; text-align: right;">${App.formatMoney(expense)}</div>
+                        <div style="flex: 1; background: #FBF1EF; border: 1px solid #F5DFDB; border-radius: 10px; padding: 14px;">
+                            <div style="font-size: 12px; color: #B85042; margin-bottom: 4px;">إجمالي المصروفات</div>
+                            <div style="font-size: 17px; font-weight: 800; color: #B85042; direction: ltr; text-align: right;">${App.formatMoney(expense)}</div>
                         </div>
                     </div>
 
                     <table style="width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right;">
                         <thead>
-                            <tr style="background: #0F172A; color: #FFFFFF;">
+                            <tr style="background: #2C2621; color: #FAF7F2;">
                                 <th style="padding: 10px;">التاريخ</th>
                                 <th style="padding: 10px;">الوصف</th>
                                 <th style="padding: 10px;">الفئة</th>
@@ -2639,13 +2561,7 @@
                 if (user) {
                     document.getElementById('user-display-name').textContent = user.name;
                     document.getElementById('user-display-email').textContent = user.email;
-
-                    const avatarBox = document.getElementById('user-avatar-box');
-                    if (user.photoURL) {
-                        avatarBox.innerHTML = `<img src="${user.photoURL}" alt="${App.escapeHtml(user.name)}" onerror="this.parentElement.textContent='${App.escapeHtml((user.name || 'م').charAt(0))}'">`;
-                    } else {
-                        avatarBox.textContent = (user.name || 'م').charAt(0).toUpperCase();
-                    }
+                    document.getElementById('user-avatar-box').textContent = (user.name || 'م').charAt(0).toUpperCase();
                 }
 
                 App.init();
@@ -2730,13 +2646,7 @@
             }
         };
 
-        // Expose Global Handlers for HTML Inline Attributes
-        window.AuthService = AuthService;
-        window.App = App;
-        window.UI = UI;
-        window.ExportService = ExportService;
-
-        window.handleAuthSubmit = function (e) {
+        function handleAuthSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
@@ -2748,9 +2658,9 @@
                 const name = document.getElementById('auth-name').value.trim();
                 AuthService.register(name, email, password);
             }
-        };
+        }
 
-        window.handleTxSubmit = function (e) {
+        function handleTxSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('tx-id').value;
             const amount = parseFloat(document.getElementById('tx-amount').value);
@@ -2773,9 +2683,9 @@
             });
 
             UI.closeTxModal();
-        };
+        }
 
-        // Initialize Application
+        // Start Application Immediately
         window.addEventListener('DOMContentLoaded', () => {
             AuthService.init();
         });
